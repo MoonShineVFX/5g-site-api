@@ -1,0 +1,20 @@
+name: Deploy to Cloud Run
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v0.6.0
+        with:
+          service: backend
+          source: .
+          region: asia-east1
+          credentials: ${{ secrets.CHT_FIVEG_GCP_SA_KEY }}
+          env_vars: DB_USER=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASS }},SQL_HOST=${{ secrets.SQL_HOST }}

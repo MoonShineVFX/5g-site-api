@@ -114,7 +114,7 @@ DATABASES = {
         'NAME': 'cht5g',
         'USER':  os.environ.get('DB_USER', 'root'),
         'PASSWORD': os.environ.get('DB_PASS', ''),
-        'HOST': os.environ.get('CLOUD_SQL_CONNECTION_NAME', 'localhost'),
+        'HOST': os.environ.get('SQL_HOST', 'localhost'),
         'PORT': '3306',
     },
 
@@ -187,8 +187,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Google Cloud Storage
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+GS_BUCKET_NAME = 'backend-django'
+
 if 'test' in sys.argv:
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
-STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME', '')
-GS_CREDENTIALS = os.environ.get('GS_CREDENTIALS', '')
