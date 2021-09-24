@@ -10,43 +10,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
-import io
 import environ
-from google.cloud import secretmanager
 from pathlib import Path
 
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
 # Set the project base directory
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-env = environ.Env(DEBUG=(bool, False))
-env_file = os.path.join(BASE_DIR, ".env")
-
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', True)
-
-if DEBUG:
-    pass
-
-elif os.path.isfile(env_file):
-    # Use a local secret file, if provided
-
-    env.read_env(env_file)
-# ...
-elif os.environ.get("GOOGLE_CLOUD_PROJECT", None):
-    # Pull secrets from Secret Manager
-    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
-
-    client = secretmanager.SecretManagerServiceClient()
-    settings_name = os.environ.get("SETTINGS_NAME", "django_settings")
-    name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
-    payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
-
-    env.read_env(io.StringIO(payload))
-else:
-    raise Exception("No local .env or GOOGLE_CLOUD_PROJECT detected. No secrets found.")
+DEBUG = env('DEBUG')
 
 
 # Quick-start development settings - unsuitable for production
@@ -130,8 +109,14 @@ DATABASES = {
             'COLLATION': "utf8_general_ci",
         }
     },
-    # Use django-environ to parse the connection string
-    'production': {}
+    'production': {
+        'ENGINE': 'mysql.connector.django',
+        'NAME': 'cht5g',
+        'USER':  os.environ.get('DB_USER', 'root'),
+        'PASSWORD': os.environ.get('DB_PASS', ''),
+        'HOST': os.environ.get('CLOUD_SQL_CONNECTION_NAME', 'localhost'),
+        'PORT': '3306',
+    },
 
 }
 
@@ -141,11 +126,7 @@ if 'test' in sys.argv:
 elif DEBUG:
     DATABASES['default'] = DATABASES['dev']
 else:
-    DATABASES['default'] = env.db()
-    # If the flag as been set, configure to use proxy
-    if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
-        DATABASES["default"]["HOST"] = "127.0.0.1"
-        DATABASES["default"]["PORT"] = 5432
+    DATABASES['default'] = DATABASES['production']
 
 
 # Password validation
@@ -186,6 +167,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+    '/static/',
+)
+
+MEDIA_ROOT = '/docker_api/media/'
+if 'test' in sys.argv:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'test')
+
+MEDIA_URL = '/media/'
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -194,6 +187,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Google Cloud Storage
 DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+if 'test' in sys.argv:
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-GS_BUCKET_NAME = env('GS_BUCKET_NAME')
-GS_CREDENTIALS = env('GS_CREDENTIALS')
+GS_BUCKET_NAME = os.environ.get('GS_BUCKET_NAME', '')
+GS_CREDENTIALS = os.environ.get('GS_CREDENTIALS', '')
