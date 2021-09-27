@@ -10,11 +10,18 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
-      - name: Deploy to Cloud Run
-        uses: google-github-actions/deploy-cloudrun@v0.6.0
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.0
         with:
-          service: backend
-          source: .
-          region: asia-east1
-          credentials: ${{ secrets.CHT_FIVEG_GCP_SA_KEY }}
-          env_vars: DB_USER=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASS }},SQL_HOST=${{ secrets.SQL_HOST }},DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},DEBUG=${{ secrets.DEBUG }},API_HOST=${{ secrets.API_HOST }}
+          project_id: cht-fiveg
+          service_account_key: ${{ secrets.CHT_FIVEG_GCP_SA_KEY }}
+      - name: Deploy to Cloud Run
+        run: |-
+          gcloud run deploy polls-service \
+              --platform managed \
+              --region asia-east1 \
+              --image gcr.io/cht-fiveg/polls-service \
+              --add-cloudsql-instances cht-fiveg:asia-east1:cht-fiveg-sql  \
+              --set-env-vars DB_USER=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASS }}, \
+                SQL_HOST=${{ secrets.SQL_HOST }},DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}, \
+                DEBUG=${{ secrets.DEBUG }},API_HOST=${{ secrets.API_HOST }}
