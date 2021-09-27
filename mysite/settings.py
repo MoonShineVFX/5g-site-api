@@ -110,12 +110,11 @@ DATABASES = {
         }
     },
     'production': {
-        'ENGINE': 'mysql.connector.django',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cht5g',
         'USER':  os.environ.get('DB_USER', 'root'),
         'PASSWORD': os.environ.get('DB_PASS', ''),
         'HOST': os.environ.get('SQL_HOST', 'localhost'),
-        'PORT': '3306',
     },
 
 }
