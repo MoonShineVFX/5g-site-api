@@ -4,11 +4,6 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 
 # Install dependencies.
-# Install for mysqlclient for django.db.backends.mysql
-RUN apt-get update
-RUN apt-get install -y default-libmysqlclient-dev
-RUN apt-get install -y gcc
-
 RUN pip install gunicorn
 COPY requirements.txt .
 RUN pip install -U pip && pip install -r requirements.txt

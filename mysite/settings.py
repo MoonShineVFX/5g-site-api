@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 import environ
-from pathlib import Path
+import pymysql
+pymysql.install_as_MySQLdb()
 
 env = environ.Env(
     # set casting, default value
