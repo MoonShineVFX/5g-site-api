@@ -17,4 +17,4 @@ jobs:
           source: .
           region: asia-east1
           credentials: ${{ secrets.CHT_FIVEG_GCP_SA_KEY }}
-          env_vars: DB_USER=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASS }},SQL_HOST=${{ secrets.SQL_HOST }},DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},DEBUG=${{ secrets.DEBUG }}
+          env_vars: DB_USER=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASS }},SQL_HOST=${{ secrets.SQL_HOST }},DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }},DEBUG=${{ secrets.DEBUG }},API_HOST=${{ secrets.API_HOST }}

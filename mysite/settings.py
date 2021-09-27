@@ -35,7 +35,7 @@ DEBUG = os.environ.get('DEBUG', False)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'himark')
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.environ.get('API_HOST', 'localhost')]
 
 
 # Application definition
