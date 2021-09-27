@@ -6,6 +6,7 @@ WORKDIR $APP_HOME
 # Install dependencies.
 RUN pip install gunicorn
 COPY requirements.txt .
+RUN apt-get install -y libmysqlclient-dev
 RUN pip install -U pip && pip install -r requirements.txt
 
 # Copy local code to the container image.
