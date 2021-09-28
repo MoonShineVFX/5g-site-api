@@ -110,8 +110,19 @@ DATABASES = {
             'COLLATION': "utf8_general_ci",
         }
     },
-}
+    # Equivalent URL:
+    # mysql+pymysql://<db_user>:<db_pass>@/<db_name>?unix_socket=<socket_path>/<cloud_sql_instance_name>
+    'production': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'cht5g',
+        'USER':  os.environ.get('DB_USER', 'root'),
+        'PASSWORD': os.environ.get('DB_PASS', ''),
+		# 在上文提到的 Connection Name
+        # 的前面加入 /cloudsql/
+        'HOST': os.environ.get('SQL_HOST', 'localhost'),
+    },
 
+}
 
 import sys
 if 'test' in sys.argv:
@@ -119,7 +130,8 @@ if 'test' in sys.argv:
 elif DEBUG:
     DATABASES['default'] = DATABASES['dev']
 else:
-    DATABASES['default'] = env.db()
+    DATABASES['default'] = DATABASES['production']
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
