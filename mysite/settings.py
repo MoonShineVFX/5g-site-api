@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import sys
 import os
 import environ
 import pymysql
@@ -27,7 +28,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
-
+PRODUCTION = os.environ.get('PRODUCTION', False)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -91,11 +92,11 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'dev': {
-        'ENGINE': 'mysql.connector.django',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cht5g',
         'USER': 'root',
-        'PASSWORD': os.environ.get('SQL_PASSWORD', ''),
-        'HOST': os.environ.get('SQL_HOST', 'localhost'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD', None),
+        'HOST': 'localhost',
         'PORT': os.environ.get('SQL_PORT', '3306'),
     },
     'test': {
@@ -117,20 +118,20 @@ DATABASES = {
         'NAME': 'cht5g',
         'USER':  os.environ.get('DB_USER', 'root'),
         'PASSWORD': os.environ.get('DB_PASS', ''),
-		# 在上文提到的 Connection Name
+        # 在上文提到的 Connection Name
         # 的前面加入 /cloudsql/
         'HOST': os.environ.get('SQL_HOST', 'localhost'),
     },
 
 }
 
-import sys
-if 'test' in sys.argv:
-    DATABASES['default'] = DATABASES['test']
-elif DEBUG:
-    DATABASES['default'] = DATABASES['dev']
-else:
+
+if PRODUCTION:
     DATABASES['default'] = DATABASES['production']
+elif 'test' in sys.argv:
+    DATABASES['default'] = DATABASES['test']
+else:
+    DATABASES['default'] = DATABASES['dev']   
 
 
 # Password validation
