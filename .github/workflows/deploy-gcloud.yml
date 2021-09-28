@@ -18,4 +18,4 @@ jobs:
           region: asia-east1
           credentials: ${{ secrets.CHT_FIVEG_GCP_SA_KEY }}
           env_vars: DB_USER=${{ secrets.DB_USER }},DB_PASS=${{ secrets.DB_PASS }},SQL_HOST=${{ secrets.SQL_HOST }},DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
-          flags: "--add-cloudsql-instances 'cht-fiveg:asia-east1:cht-fiveg-sql'"
+          flags: "--add-cloudsql-instances cht-fiveg:asia-east1:cht-fiveg-sql"
