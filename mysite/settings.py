@@ -90,6 +90,8 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 
+SQL_HOST = os.environ.get('SQL_HOST')
+
 DATABASES = {
     'dev': {
         'ENGINE': 'django.db.backends.mysql',
@@ -120,7 +122,8 @@ DATABASES = {
         'PASSWORD': os.environ.get('DB_PASS', ''),
         # 在上文提到的 Connection Name
         # 的前面加入 /cloudsql/
-        'HOST': os.environ.get('SQL_HOST', 'localhost'),
+
+        'HOST': f'{SQL_HOST}',
     },
 
 }
