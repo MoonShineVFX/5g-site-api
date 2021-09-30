@@ -20,6 +20,9 @@ res_error = {
 
 
 class BannerList(APIView):
+    def get(self, request, *args, **kwargs):
+        return self.post(self, request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         queryset = Banner.objects.all()
         serializer = serializers.BannerListSerializer(queryset, many=True)
