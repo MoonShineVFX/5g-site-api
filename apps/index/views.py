@@ -1,22 +1,31 @@
-from .models import Banner, Partner
-from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView
+from .models import About, Banner, Partner
+from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, UpdateAPIView, RetrieveAPIView
 from rest_framework.views import APIView
+from rest_framework import mixins
 from rest_framework import status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from . import serializers
 
 
-res_success = {
-    "result": 1,
-    "message": "",
-    "data": {}
-}
-res_error = {
-    "result": 0,
-    "message": "",
-    "errors": [],
-}
+class AboutDetail(RetrieveAPIView):
+    serializer_class = serializers.AboutSerializer
+
+    def get_object(self):
+        return About.objects.first()
+
+    def post(self, request, *args, **kwargs):
+        return self.get(self, request, *args, **kwargs)
+
+
+class AboutUpdate(GenericAPIView, mixins.UpdateModelMixin):
+    serializer_class = serializers.AboutSerializer
+
+    def get_object(self):
+        return About.objects.first()
+
+    def post(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
 
 class BannerList(APIView):
@@ -60,7 +69,7 @@ class BannerCreate(CreateAPIView):
     serializer_class = serializers.BannerCreateUpdateSerializer
 
 
-class BannerUpdate(UpdateAPIView):
+class BannerUpdate(GenericAPIView, mixins.UpdateModelMixin):
     queryset = Banner.objects.all()
     serializer_class = serializers.BannerCreateUpdateSerializer
 

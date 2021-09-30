@@ -37,7 +37,7 @@ PRODUCTION = os.environ.get('PRODUCTION', False)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'himark')
 
 
-ALLOWED_HOSTS = [os.environ.get('API_HOST', 'localhost')]
+ALLOWED_HOSTS = os.environ.get('API_HOST', 'localhost').split(' ')
 
 
 # Application definition

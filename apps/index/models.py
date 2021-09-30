@@ -6,7 +6,13 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class Setting(models.Model):
-    length = models.IntegerField(default=5)
+    banner_length = models.IntegerField(default=5)
+
+    objects = models.Manager()
+
+
+class About(models.Model):
+    detail = models.TextField(null=True)
 
     objects = models.Manager()
 

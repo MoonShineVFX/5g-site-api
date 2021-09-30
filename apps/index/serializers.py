@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
 import datetime
 from rest_framework import serializers
-from .models import Banner, Partner, Setting
+from .models import Setting, About, Banner, Partner
+
+
+class AboutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = About
+        fields = '__all__'
 
 
 class BannerListSerializer(serializers.ModelSerializer):
@@ -16,12 +22,14 @@ class BannerListSerializer(serializers.ModelSerializer):
 
 
 class BannerLengthSerializer(serializers.ModelSerializer):
+    length = serializers.IntegerField(source='banner_length')
+
     class Meta:
         model = Setting
         fields = ('length',)
 
     def validate(self, data):
-        length = data['length']
+        length = data['banner_length']
         if length < 5 or length > 10:
             raise serializers.ValidationError("length must between 5 and 10")
         return data
