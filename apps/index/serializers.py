@@ -5,11 +5,14 @@ from .models import Banner, Partner, Setting
 
 
 class BannerListSerializer(serializers.ModelSerializer):
-    imgUrl = serializers.CharField(source='image')
+    imgUrl = serializers.SerializerMethodField()
 
     class Meta:
         model = Banner
         fields = ('id', 'title', 'imgUrl', 'link', 'priority')
+
+    def get_imgUrl(self, instance):
+        return "https://storage.googleapis.com/backend-django/{}".format(instance.image) if instance.image else None
 
 
 class BannerLengthSerializer(serializers.ModelSerializer):
@@ -26,7 +29,7 @@ class BannerLengthSerializer(serializers.ModelSerializer):
 
 class BannerCreateUpdateSerializer(serializers.ModelSerializer):
     file = serializers.ImageField(write_only=True)
-    imgUrl = serializers.CharField(source='image', read_only=True)
+    imgUrl = serializers.SerializerMethodField()
 
     class Meta:
         model = Banner
@@ -46,6 +49,9 @@ class BannerCreateUpdateSerializer(serializers.ModelSerializer):
             validated_data['size'] = upload_file.size
             validated_data['image'] = validated_data.pop('file')
         return super().update(instance, validated_data)
+
+    def get_imgUrl(self, instance):
+        return "https://storage.googleapis.com/backend-django/{}".format(instance.image) if instance.image else None
 
 
 class PartnerSerializer(serializers.ModelSerializer):
