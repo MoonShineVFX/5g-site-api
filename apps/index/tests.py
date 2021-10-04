@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from django.test.utils import override_settings
 from ..shortcuts import debugger_queries
-from .models import About, Banner, Partner
+from .models import About, Banner, Partner, Setting
 from rest_framework.exceptions import ErrorDetail
 
 from unittest.mock import MagicMock
@@ -29,6 +29,7 @@ class IndexTest(TestCase):
     def setUp(self):
         self.client = APIClient()
         About.objects.create(id=1, detail="<html>xxxxxxx</html>")
+        Setting.objects.create(id=1, banner_length=5)
         self.b1 = Banner.objects.create(
             id=1, title="title01", image=get_upload_file(file_type='.jpg'), link="company01.com", priority=1, size=0)
 
@@ -102,6 +103,7 @@ class IndexTest(TestCase):
         response = self.client.post(url, data=data, format='json')
         assert response.data == {'result': 1, 'message': '成功', 'errors': [], 'data': {}}
         assert response.status_code == 200
+        assert Setting.objects.filter(id=1, banner_length=7).exists()
 
         data = {
             "length": 1,

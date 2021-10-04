@@ -8,8 +8,10 @@ from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import connection, reset_queries
 
-
-utc_now = timezone.now()
+from rest_framework.generics import GenericAPIView
+from rest_framework import mixins
+from rest_framework import status
+from rest_framework.response import Response
 
 
 def get_or_404(func):
@@ -68,4 +70,59 @@ def debugger_queries(func):
 
     return wrapper
 
+
+class PostUpdateView(GenericAPIView, mixins.UpdateModelMixin):
+    def post(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
+class WebCreateView(GenericAPIView):
+    def get_extra_attrs(self):
+        return {}
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save(**self.get_extra_attrs())
+            data = {
+                "result": 1,
+                "message": "成功",
+                "errors": [],
+                "data": {}
+            }
+            return Response(data, status=status.HTTP_201_CREATED)
+        else:
+            data = {
+                "result": 0,
+                "message": "失敗",
+                "errors": [serializer.errors],
+                "data": {}
+            }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+
+class WebUpdateView(GenericAPIView):
+    def get_extra_attrs(self):
+        return {}
+
+    def post(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.serializer_class(instance=instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save(**self.get_extra_attrs())
+            data = {
+                "result": 1,
+                "message": "成功",
+                "errors": [],
+                "data": {}
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            data = {
+                "result": 0,
+                "message": "失敗",
+                "errors": [serializer.errors],
+                "data": {}
+            }
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
