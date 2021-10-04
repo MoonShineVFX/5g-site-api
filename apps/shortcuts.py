@@ -3,7 +3,7 @@ import uuid
 import functools
 import time
 
-from django.utils import timezone
+from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import connection, reset_queries
@@ -74,6 +74,9 @@ def debugger_queries(func):
 class PostUpdateView(GenericAPIView, mixins.UpdateModelMixin):
     def post(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+    def get_object(self):
+        return get_object_or_404(self.queryset, id=self.request.data.get('id', None))
 
 
 class WebCreateView(GenericAPIView):

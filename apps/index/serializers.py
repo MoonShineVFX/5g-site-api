@@ -42,7 +42,7 @@ class BannerCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Banner
         fields = ('id', 'title', 'imgUrl', 'file', 'link', 'priority')
-        read_only = ('id', 'token', 'imgUrl',)
+        read_only = ('id', 'imgUrl',)
 
     def create(self, validated_data):
         upload_file = validated_data['file']
@@ -63,6 +63,39 @@ class BannerCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class PartnerSerializer(serializers.ModelSerializer):
+    imgUrl = serializers.SerializerMethodField()
+    tags = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
     class Meta:
         model = Partner
-        fields = '__all__'
+        fields = ('id',  'imgUrl', 'link', 'name', 'phone', 'email', 'description', 'tags')
+        read_only = ('id', 'imgUrl',)
+
+    def get_imgUrl(self, instance):
+        return "https://storage.googleapis.com/backend-django/{}".format(instance.image) if instance.image else None
+
+
+class PartnerCreateUpdateSerializer(serializers.ModelSerializer):
+    file = serializers.ImageField(write_only=True)
+    imgUrl = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Partner
+        fields = ('id', 'imgUrl', 'file', 'link', 'name', 'phone', 'email', 'description', 'tags')
+        read_only = ('id', 'imgUrl',)
+
+    def create(self, validated_data):
+        upload_file = validated_data['file']
+        validated_data['size'] = upload_file.size
+        validated_data['image'] = validated_data.pop('file')
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        upload_file = validated_data['file']
+        if upload_file:
+            validated_data['size'] = upload_file.size
+            validated_data['image'] = validated_data.pop('file')
+        return super().update(instance, validated_data)
+
+    def get_imgUrl(self, instance):
+        return "https://storage.googleapis.com/backend-django/{}".format(instance.image) if instance.image else None

@@ -1,4 +1,5 @@
 from .models import About, Banner, Partner, Setting
+from ..tag.models import Tag
 from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, UpdateAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework import mixins
@@ -7,6 +8,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from ..shortcuts import PostUpdateView, WebUpdateView
 from . import serializers
+from ..tag.serializers import TagSerializer
 
 
 class AboutDetail(RetrieveAPIView):
@@ -52,12 +54,31 @@ class BannerCreate(CreateAPIView):
     serializer_class = serializers.BannerCreateUpdateSerializer
 
 
-class BannerUpdate(GenericAPIView, mixins.UpdateModelMixin):
+class BannerUpdate(PostUpdateView):
     queryset = Banner.objects.all()
     serializer_class = serializers.BannerCreateUpdateSerializer
 
-    def get_object(self):
-        return get_object_or_404(Banner, id=self.request.data.get('id', None))
+
+class PartnerList(APIView):
+    def get(self, request, *args, **kwargs):
+        return self.post(self, request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
+        partners = Partner.objects.prefetch_related('tags').all()
+        tags = Tag.objects.all()
+
+        data = {
+            "tag": TagSerializer(tags, many=True).data,
+            "partner": serializers.PartnerSerializer(partners, many=True).data,
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class PartnerCreate(CreateAPIView):
+    queryset = Partner.objects.all()
+    serializer_class = serializers.PartnerCreateUpdateSerializer
+
+
+class PartnerUpdate(PostUpdateView):
+    queryset = Partner.objects.all()
+    serializer_class = serializers.PartnerCreateUpdateSerializer

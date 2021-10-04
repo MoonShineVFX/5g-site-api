@@ -9,4 +9,8 @@ urlpatterns = [
 
     url(r'^about$', views.AboutDetail.as_view(), name='about-detail'),
     url(r'^about_update$', views.AboutUpdate.as_view(), name='about-update'),
+
+    url(r'^partners$', views.PartnerList.as_view(), name='partner-list'),
+    url(r'^partner_create$', views.PartnerCreate.as_view(), name='partner-create'),
+    url(r'^partner_update$', views.PartnerUpdate.as_view(), name='partner-update'),
 ]

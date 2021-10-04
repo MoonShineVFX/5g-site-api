@@ -37,7 +37,7 @@ class Partner(models.Model):
     link = models.URLField()
     image = models.ImageField(upload_to='partners', null=True)
     size = models.IntegerField(null=True)
-    tag = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag)
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
