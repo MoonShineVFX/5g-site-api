@@ -1,11 +1,9 @@
 from .models import About, Banner, Partner, Setting
 from ..tag.models import Tag
-from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, UpdateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.views import APIView
-from rest_framework import mixins
 from rest_framework import status
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
 from ..shortcuts import PostUpdateView, WebUpdateView
 from . import serializers
 from ..tag.serializers import TagSerializer
