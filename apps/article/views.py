@@ -1,12 +1,9 @@
-from django.utils import timezone
-from .models import News
+from .models import News, Image
 from . import serializers
 from rest_framework.generics import ListAPIView, RetrieveAPIView
-from rest_framework.views import APIView
-from rest_framework import status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from ..shortcuts import WebCreateView, WebUpdateView
+from ..shortcuts import WebCreateView, WebUpdateView, PostCreateView
 
 
 class NewsList(ListAPIView):
@@ -44,3 +41,8 @@ class NewsUpdate(WebUpdateView):
 
     def get_object(self):
         return get_object_or_404(News, id=self.request.data.get('id', None))
+
+
+class ImageUpload(PostCreateView):
+    serializer_class = serializers.ImageSerializer
+    queryset = Image.objects.all()

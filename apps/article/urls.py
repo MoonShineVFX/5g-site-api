@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^news_create$', views.NewsCreate.as_view(), name='news-create'),
     url(r'^news_update$', views.NewsUpdate.as_view(), name='news-update'),
 
+    url(r'^image_upload$', views.ImageUpload.as_view(), name='image-upload'),
 ]

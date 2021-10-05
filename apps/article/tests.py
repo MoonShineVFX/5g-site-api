@@ -3,13 +3,12 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from django.test.utils import override_settings
 from ..shortcuts import debugger_queries
-from rest_framework.exceptions import ErrorDetail
 
-from .models import News
+from .models import News, Image
 from ..user.models import User
-from ..tag.models import Tag, Category
 
 from ..tag.tests import setup_categories_tags
+from ..index.tests import get_test_image_file
 
 
 class ArticleTest(TestCase):
@@ -92,3 +91,19 @@ class ArticleTest(TestCase):
         self.assertEqual(news.updated_at.date(), datetime.today().date())
         tag_id_list = [tag.id for tag in news.tags.all()]
         assert tag_id_list == [1, 2]
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_upload_image(self):
+        url = '/api/image_upload'
+        data = {
+            "file": get_test_image_file(),
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='multipart')
+        print(response.data)
+        assert response.status_code == 201
+        assert "imgUrl" in response.data
+        img = Image.objects.first()
+        assert img is not None
+        assert img.size != 0

@@ -7,6 +7,25 @@ from ..shortcuts import PostUpdateView
 from rest_framework.permissions import IsAuthenticated
 
 
+class CommonView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def post(self, request, *args, **kwargs):
+        news_tags = Tag.objects.select_related('category').filter(category_id__in=[1, 2])
+        data = {
+            "result": 1,
+            "message": "",
+            "errors": [],
+            "data": {
+                "userId": self.request.user.id,
+                "userName": self.request.user.name,
+                "newsTag": serializers.TagWithCategorySerializer(news_tags, many=True).data,
+
+            }
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+
 class TagAndCategoryList(APIView):
 
     def get(self, request, *args, **kwargs):
