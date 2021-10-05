@@ -11,7 +11,8 @@ class NewsSerializer(serializers.ModelSerializer):
 
 
 class NewsListSerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField()
+    categoryId = serializers.SerializerMethodField()
+    categoryKey = serializers.SerializerMethodField()
     categoryName = serializers.SerializerMethodField()
     tags = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     createTime = serializers.DateTimeField(source='created_at')
@@ -19,9 +20,13 @@ class NewsListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = News
-        fields = ('id', 'title', 'description', 'category', 'categoryName', 'tags', 'createTime', 'updateTime')
+        fields = ('id', 'title', 'description', 'categoryId', 'categoryKey', 'categoryName', 'tags',
+                  'createTime', 'updateTime')
 
-    def get_category(self, instance):
+    def get_categoryId(self, instance):
+        return instance.tags.all()[0].category_id if instance.tags else None
+
+    def get_categoryKey(self, instance):
         return instance.tags.all()[0].category.key if instance.tags else None
 
     def get_categoryName(self, instance):

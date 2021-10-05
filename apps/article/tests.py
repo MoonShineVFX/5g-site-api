@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.test import TestCase
 from rest_framework.test import APIClient
 from django.test.utils import override_settings
@@ -17,9 +18,9 @@ class ArticleTest(TestCase):
         setup_category()
         self.user = User.objects.create(id=1, name="user01", email="user01@mail.com")
         n1 = News.objects.create(id=1, title="news01", description="description", detail="<html>xxxxxxx</html>",
-                                 author_id=1)
+                                 creator_id=1)
         n2 = News.objects.create(id=2, title="news02", description="description", detail="<html>xxxxxxx</html>",
-                                 author_id=1)
+                                 creator_id=1)
         n1.tags.add(1)
         n2.tags.add(2)
 
@@ -57,7 +58,7 @@ class ArticleTest(TestCase):
         assert response.status_code == 201
         assert response.data == {'result': 1, 'message': '成功', 'errors': [], 'data': {}}
         del data["tags"]
-
+        data["creator_id"] = self.user.id
         news = News.objects.filter(**data).first()
         assert news is not None
         tag_id_list = [tag.id for tag in news.tags.all()]
@@ -85,7 +86,9 @@ class ArticleTest(TestCase):
         assert response.status_code == 200
         assert response.data == {'result': 1, 'message': '成功', 'errors': [], 'data': {}}
         del data["tags"]
+        data["updater_id"] = self.user.id
         news = News.objects.filter(**data).first()
         assert news is not None
+        self.assertEqual(news.updated_at.date(), datetime.today().date())
         tag_id_list = [tag.id for tag in news.tags.all()]
         assert tag_id_list == [1, 2]

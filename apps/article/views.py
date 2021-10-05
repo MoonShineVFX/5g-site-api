@@ -40,16 +40,11 @@ class NewsCreate(WebCreateView):
     queryset = News.objects.all()
     permission_classes = (IsAuthenticated, )
 
-    def get_extra_attrs(self):
-        return {"author": self.request.user}
-
 
 class NewsUpdate(WebUpdateView):
     serializer_class = serializers.NewsSerializer
     queryset = News.objects.all()
-
-    def get_extra_attrs(self):
-        return {"updated_at": timezone.now()}
+    permission_classes = (IsAuthenticated, )
 
     def get_object(self):
         return get_object_or_404(News, id=self.request.data.get('id', None))

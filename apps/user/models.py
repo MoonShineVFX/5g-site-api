@@ -27,3 +27,20 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def username(self):
         return self.email
+
+
+class EditorBaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(null=True)
+    creator = models.ForeignKey(
+        User,
+        related_name="%(app_label)s_%(class)s_creation",
+        on_delete=models.CASCADE)
+    updater = models.ForeignKey(
+        User,
+        related_name="%(app_label)s_%(class)s_update",
+        on_delete=models.CASCADE,
+        null=True)
+
+    class Meta:
+        abstract = True

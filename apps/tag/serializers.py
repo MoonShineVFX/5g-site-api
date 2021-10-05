@@ -17,14 +17,15 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class TagWithCategorySerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField()
+    categoryId = serializers.IntegerField(source="category_id")
+    categoryKey = serializers.SerializerMethodField()
     categoryName = serializers.SerializerMethodField()
 
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'category', 'categoryName')
+        fields = ('id', 'name', 'categoryId', 'categoryKey', 'categoryName')
 
-    def get_category(self, instance):
+    def get_categoryKey(self, instance):
         return instance.category.key if instance.category else None
 
     def get_categoryName(self, instance):
@@ -46,15 +47,15 @@ class TagListCreateSerializer(serializers.Serializer):
 
 
 class TagUpdateSerializer(serializers.ModelSerializer):
-    categoryId = serializers.IntegerField(write_only=True, source="category_id")
-    category = serializers.SerializerMethodField()
+    categoryId = serializers.IntegerField(source="category_id")
+    categoryKey = serializers.SerializerMethodField()
     categoryName = serializers.SerializerMethodField()
 
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'category', 'categoryName', 'categoryId')
+        fields = ('id', 'name', 'categoryId', 'categoryKey', 'categoryName', )
 
-    def get_category(self, instance):
+    def get_categoryKey(self, instance):
         return instance.category.key if instance.category else None
 
     def get_categoryName(self, instance):

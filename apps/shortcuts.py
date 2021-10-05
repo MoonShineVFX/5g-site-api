@@ -2,6 +2,7 @@
 import uuid
 import functools
 import time
+from django.utils import timezone
 
 from django.shortcuts import get_object_or_404
 from django.http import Http404
@@ -81,7 +82,7 @@ class PostUpdateView(GenericAPIView, mixins.UpdateModelMixin):
 
 class WebCreateView(GenericAPIView):
     def get_extra_attrs(self):
-        return {}
+        return {"creator_id": self.request.user.id}
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -106,7 +107,7 @@ class WebCreateView(GenericAPIView):
 
 class WebUpdateView(GenericAPIView):
     def get_extra_attrs(self):
-        return {}
+        return {"updater_id": self.request.user.id, "updated_at": timezone.now()}
 
     def post(self, request, *args, **kwargs):
         instance = self.get_object()

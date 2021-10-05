@@ -4,7 +4,6 @@ from django.test.utils import override_settings
 from ..shortcuts import debugger_queries
 from .models import Tag, Category
 
-from collections import OrderedDict
 
 def setup_category():
     cats = [
@@ -88,5 +87,8 @@ class TagTest(TestCase):
         }
         response = self.client.post(url, data=data, format='json')
         assert response.status_code == 200
-        assert response.data == {'id': 1, 'name': '新名稱', 'category': 'newsIndustry', 'categoryName': '產業訊息'}
+        print( response.data)
+        self.assertEqual(
+            response.data,
+            {'id': 1, 'name': '新名稱', 'categoryId': 2, 'categoryKey': 'newsIndustry', 'categoryName': '產業訊息'})
         assert Tag.objects.filter(id=1, name="新名稱", category_id=2).exists()
