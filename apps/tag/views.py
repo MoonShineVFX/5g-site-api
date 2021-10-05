@@ -4,9 +4,11 @@ from rest_framework.response import Response
 from .models import Tag, Category
 from . import serializers
 from ..shortcuts import PostUpdateView
+from rest_framework.permissions import IsAuthenticated
 
 
 class TagAndCategoryList(APIView):
+
     def get(self, request, *args, **kwargs):
         return self.post(self, request, *args, **kwargs)
 
@@ -22,10 +24,12 @@ class TagAndCategoryList(APIView):
 
 
 class TagCreate(APIView):
+    permission_classes = (IsAuthenticated, )
+
     def post(self, request, *args, **kwargs):
         serializer = serializers.TagListCreateSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(creator_id=self.request.user.id)
 
             tags = Tag.objects.select_related('category').all()
             data = {

@@ -9,14 +9,14 @@ from .models import News
 from ..user.models import User
 from ..tag.models import Tag, Category
 
-from ..tag.tests import setup_category
+from ..tag.tests import setup_categories_tags
 
 
 class ArticleTest(TestCase):
     def setUp(self):
         self.client = APIClient()
-        setup_category()
         self.user = User.objects.create(id=1, name="user01", email="user01@mail.com")
+        setup_categories_tags()
         n1 = News.objects.create(id=1, title="news01", description="description", detail="<html>xxxxxxx</html>",
                                  creator_id=1)
         n2 = News.objects.create(id=2, title="news02", description="description", detail="<html>xxxxxxx</html>",

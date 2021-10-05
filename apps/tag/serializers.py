@@ -41,7 +41,10 @@ class TagListCreateSerializer(serializers.Serializer):
     tag = serializers.ListSerializer(child=TagNameCategorySerializer())
 
     def create(self, validated_data):
-        tags = [Tag(name=tag['name'], category_id=tag['categoryId']) for tag in validated_data['tag']]
+        print(validated_data["creator_id"])
+        tags = [
+            Tag(name=tag['name'], category_id=tag['categoryId'], creator_id=validated_data["creator_id"])
+            for tag in validated_data['tag']]
         created_tags = Tag.objects.bulk_create(tags)
         return created_tags[0]
 

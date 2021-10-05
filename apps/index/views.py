@@ -4,9 +4,10 @@ from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-from ..shortcuts import PostUpdateView, WebUpdateView
+from ..shortcuts import PostCreateView, PostUpdateView, WebUpdateView
 from . import serializers
 from ..tag.serializers import TagSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 class AboutDetail(RetrieveAPIView):
@@ -47,7 +48,7 @@ class BannerLengthSetting(WebUpdateView):
     serializer_class = serializers.BannerLengthSerializer
 
 
-class BannerCreate(CreateAPIView):
+class BannerCreate(PostCreateView):
     queryset = Banner.objects.all()
     serializer_class = serializers.BannerCreateUpdateSerializer
 
@@ -72,7 +73,7 @@ class PartnerList(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-class PartnerCreate(CreateAPIView):
+class PartnerCreate(PostCreateView):
     queryset = Partner.objects.all()
     serializer_class = serializers.PartnerCreateUpdateSerializer
 

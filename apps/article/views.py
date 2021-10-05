@@ -8,8 +8,6 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from ..shortcuts import WebCreateView, WebUpdateView
 
-from rest_framework.permissions import IsAuthenticated
-
 
 class NewsList(ListAPIView):
     serializer_class = serializers.NewsListSerializer
@@ -38,13 +36,11 @@ class NewsDetail(RetrieveAPIView):
 class NewsCreate(WebCreateView):
     serializer_class = serializers.NewsSerializer
     queryset = News.objects.all()
-    permission_classes = (IsAuthenticated, )
 
 
 class NewsUpdate(WebUpdateView):
     serializer_class = serializers.NewsSerializer
     queryset = News.objects.all()
-    permission_classes = (IsAuthenticated, )
 
     def get_object(self):
         return get_object_or_404(News, id=self.request.data.get('id', None))

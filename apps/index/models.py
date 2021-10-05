@@ -1,35 +1,34 @@
 import os
 from django.db import models
 from ..tag.models import Tag
+from ..user.models import EditorBaseModel
 from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist
 
 
-class Setting(models.Model):
+class Setting(EditorBaseModel):
     banner_length = models.IntegerField(default=5)
 
     objects = models.Manager()
 
 
-class About(models.Model):
+class About(EditorBaseModel):
     detail = models.TextField(null=True)
 
     objects = models.Manager()
 
 
-class Banner(models.Model):
+class Banner(EditorBaseModel):
     title = models.CharField(max_length=100)
     link = models.URLField()
     image = models.ImageField(upload_to='banners', null=True)
     priority = models.IntegerField(default=1)
     size = models.IntegerField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(null=True)
 
     objects = models.Manager()
 
 
-class Partner(models.Model):
+class Partner(EditorBaseModel):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=20)
     email = models.EmailField()
@@ -38,7 +37,6 @@ class Partner(models.Model):
     image = models.ImageField(upload_to='partners', null=True)
     size = models.IntegerField(null=True)
     tags = models.ManyToManyField(Tag)
-    created_at = models.DateTimeField(auto_now_add=True)
 
     objects = models.Manager()
 

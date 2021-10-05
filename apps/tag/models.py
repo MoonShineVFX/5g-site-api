@@ -1,4 +1,5 @@
 from django.db import models
+from ..user.models import EditorBaseModel
 
 
 class Category(models.Model):
@@ -6,7 +7,7 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
 
 
-class Tag(models.Model):
+class Tag(EditorBaseModel):
     name = models.CharField(max_length=100)
     category = models.ForeignKey(Category, models.CASCADE)
 

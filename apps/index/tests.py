@@ -3,13 +3,14 @@ from rest_framework.test import APIClient
 from django.test.utils import override_settings
 from ..shortcuts import debugger_queries
 from .models import About, Banner, Partner, Setting
+from ..user.models import User
 from rest_framework.exceptions import ErrorDetail
 
 from unittest.mock import MagicMock
 from django.core.files import File
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from ..tag.tests import setup_category
+from ..tag.tests import setup_categories_tags
 
 
 def get_upload_file(filename="test", file_type=".zip"):
@@ -30,17 +31,19 @@ def get_test_file(**kwargs):
 class IndexTest(TestCase):
     def setUp(self):
         self.client = APIClient()
-        setup_category()
-        About.objects.create(id=1, detail="<html>xxxxxxx</html>")
-        Setting.objects.create(id=1, banner_length=5)
+        self.user = User.objects.create(id=1, name="user01", email="user01@mail.com")
+        setup_categories_tags()
+        About.objects.create(id=1, detail="<html>xxxxxxx</html>", creator_id=1)
+        Setting.objects.create(id=1, banner_length=5, creator_id=1)
         self.b1 = Banner.objects.create(
-            id=1, title="title01", image=get_upload_file(file_type='.jpg'), link="company01.com", priority=1, size=0)
+            id=1, title="title01", image=get_upload_file(file_type='.jpg'), link="company01.com", priority=1, size=0,
+            creator_id=1)
 
         self.p1 = Partner.objects.create(
-            id=1, image=get_upload_file(file_type='.jpg'),
+            id=1, image=get_upload_file(file_type='.jpg'), creator_id=1,
             name="夥伴名稱", phone="夥伴電話", email="夥伴信箱", description="夥伴介紹", link="http://google.com.tw", size=0)
         p2 = Partner.objects.create(
-            id=2, image=get_upload_file(file_type='.jpg'),
+            id=2, image=get_upload_file(file_type='.jpg'), creator_id=1,
             name="夥伴名稱2", phone="夥伴電話2", email="夥伴信箱2", description="夥伴介紹2", link="http://google.com.tw", size=0)
         self.p1.tags.add(1, 2)
         p2.tags.add(1, 2)
@@ -60,6 +63,7 @@ class IndexTest(TestCase):
         data = {
             "detail": "<html>new</html>",
         }
+        self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
         assert response.status_code == 200
         assert response.data['detail'] == "<html>new</html>"
@@ -82,6 +86,7 @@ class IndexTest(TestCase):
             "link": "http://google.com.tw",
             "priority": 2
         }
+        self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='multipart')
         print(response.data)
         assert response.status_code == 201
@@ -100,6 +105,7 @@ class IndexTest(TestCase):
             "link": "http://google.com.tw",
             "priority": 2
         }
+        self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='multipart')
         print(response.data)
         assert response.status_code == 200
@@ -112,6 +118,7 @@ class IndexTest(TestCase):
         data = {
             "length": 7,
         }
+        self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
         assert response.data == {'result': 1, 'message': '成功', 'errors': [], 'data': {}}
         assert response.status_code == 200
@@ -148,6 +155,7 @@ class IndexTest(TestCase):
             "description": "夥伴介紹",
             "tags": [1, 2]
         }
+        self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='multipart')
         print(response.data)
         assert response.status_code == 201
@@ -172,6 +180,7 @@ class IndexTest(TestCase):
             "description": "夥伴介紹",
             "tags": [1]
         }
+        self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='multipart')
         print(response.data)
         assert response.status_code == 200

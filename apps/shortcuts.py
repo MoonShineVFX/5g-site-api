@@ -9,10 +9,11 @@ from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import connection, reset_queries
 
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework import mixins
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 
 def get_or_404(func):
@@ -72,15 +73,29 @@ def debugger_queries(func):
     return wrapper
 
 
+class PostCreateView(CreateAPIView):
+    permission_classes = (IsAuthenticated, )
+
+    def perform_create(self, serializer):
+        serializer.save(**{"creator_id": self.request.user.id})
+
+
 class PostUpdateView(GenericAPIView, mixins.UpdateModelMixin):
+    permission_classes = (IsAuthenticated, )
+
     def post(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+    def perform_update(self, serializer):
+        serializer.save(**{"updater_id": self.request.user.id, "updated_at": timezone.now()})
 
     def get_object(self):
         return get_object_or_404(self.queryset, id=self.request.data.get('id', None))
 
 
 class WebCreateView(GenericAPIView):
+    permission_classes = (IsAuthenticated, )
+
     def get_extra_attrs(self):
         return {"creator_id": self.request.user.id}
 
@@ -106,6 +121,8 @@ class WebCreateView(GenericAPIView):
 
 
 class WebUpdateView(GenericAPIView):
+    permission_classes = (IsAuthenticated, )
+
     def get_extra_attrs(self):
         return {"updater_id": self.request.user.id, "updated_at": timezone.now()}
 
