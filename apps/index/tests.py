@@ -120,7 +120,7 @@ class IndexTest(TestCase):
         }
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
-        assert response.data == {'result': 1, 'message': '成功', 'errors': [], 'data': {}}
+        assert response.data == {}
         assert response.status_code == 200
         assert Setting.objects.filter(id=1, banner_length=7).exists()
 
@@ -128,10 +128,7 @@ class IndexTest(TestCase):
             "length": 1,
         }
         response = self.client.post(url, data=data, format='json')
-        assert response.data == {
-            'result': 0, 'message': '失敗',
-            'errors': [{'non_field_errors': [ErrorDetail(string='length must between 5 and 10', code='invalid')]}],
-            'data': {}}
+        assert response.data == {'non_field_errors': [ErrorDetail(string='length must between 5 and 10', code='invalid')]}
         assert response.status_code == 400
 
     @override_settings(DEBUG=True)

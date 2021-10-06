@@ -55,7 +55,7 @@ class ArticleTest(TestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
         assert response.status_code == 201
-        assert response.data == {'result': 1, 'message': '成功', 'errors': [], 'data': {}}
+        assert response.data == {}
         del data["tags"]
         data["creator_id"] = self.user.id
         news = News.objects.filter(**data).first()
@@ -83,7 +83,7 @@ class ArticleTest(TestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
         assert response.status_code == 200
-        assert response.data == {'result': 1, 'message': '成功', 'errors': [], 'data': {}}
+        assert response.data == {}
         del data["tags"]
         data["updater_id"] = self.user.id
         news = News.objects.filter(**data).first()

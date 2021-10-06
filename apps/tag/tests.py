@@ -84,12 +84,8 @@ class TagTest(TestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
         assert response.status_code == 200
-        print(response.data)
+
         expect = {
-            'result': 1,
-            'message': '',
-            'errors': [],
-            'data': {
                 'userId': 1,
                 'userName': 'user01',
                 'newsTag': [
@@ -103,5 +99,5 @@ class TagTest(TestCase):
                      'categoryId': 2,
                      'categoryKey': 'newsIndustry',
                      'categoryName': '產業訊息'}
-                ]}}
+                ]}
         assert response.data == expect

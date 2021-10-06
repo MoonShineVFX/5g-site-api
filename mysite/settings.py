@@ -37,12 +37,12 @@ PRODUCTION = os.environ.get('PRODUCTION', False)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'himark')
 
 
-ALLOWED_HOSTS = os.environ.get('API_HOST', 'localhost').split(' ')
-
+ALLOWED_HOSTS = os.environ.get('API_HOST', '127.0.0.1').split(' ')
 
 # Application definition
 
 INSTALLED_APPS = [
+    "corsheaders",
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -61,6 +61,7 @@ AUTH_USER_MODEL = 'user.User'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -92,7 +93,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # REST_FRAMEWORK
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
+        'apps.renderers.ApiRenderer',
     )
 }
 
@@ -210,3 +211,7 @@ GS_BUCKET_NAME = 'backend-django'
 
 if 'test' in sys.argv:
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+
+# django-cors-headers
+CORS_ALLOW_ALL_ORIGINS: True

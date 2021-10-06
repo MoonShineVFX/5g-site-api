@@ -103,21 +103,10 @@ class WebCreateView(GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save(**self.get_extra_attrs())
-            data = {
-                "result": 1,
-                "message": "成功",
-                "errors": [],
-                "data": {}
-            }
+            data = {}
             return Response(data, status=status.HTTP_201_CREATED)
         else:
-            data = {
-                "result": 0,
-                "message": "失敗",
-                "errors": [serializer.errors],
-                "data": {}
-            }
-            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class WebUpdateView(GenericAPIView):
@@ -131,19 +120,8 @@ class WebUpdateView(GenericAPIView):
         serializer = self.serializer_class(instance=instance, data=request.data)
         if serializer.is_valid():
             serializer.save(**self.get_extra_attrs())
-            data = {
-                "result": 1,
-                "message": "成功",
-                "errors": [],
-                "data": {}
-            }
+            data = {}
             return Response(data, status=status.HTTP_200_OK)
         else:
-            data = {
-                "result": 0,
-                "message": "失敗",
-                "errors": [serializer.errors],
-                "data": {}
-            }
-            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

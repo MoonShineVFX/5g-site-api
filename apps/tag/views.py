@@ -1,27 +1,23 @@
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework import status
 from rest_framework.response import Response
 from .models import Tag, Category
 from . import serializers
 from ..shortcuts import PostUpdateView
+from ..renderers import ApiRenderer
 from rest_framework.permissions import IsAuthenticated
 
 
 class CommonView(APIView):
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         news_tags = Tag.objects.select_related('category').filter(category_id__in=[1, 2])
         data = {
-            "result": 1,
-            "message": "",
-            "errors": [],
-            "data": {
-                "userId": self.request.user.id,
-                "userName": self.request.user.name,
-                "newsTag": serializers.TagWithCategorySerializer(news_tags, many=True).data,
-
-            }
+            "userId": self.request.user.id,
+            "userName": self.request.user.name,
+            "newsTag": serializers.TagWithCategorySerializer(news_tags, many=True).data,
         }
         return Response(data, status=status.HTTP_200_OK)
 
