@@ -39,7 +39,7 @@ class TagTest(TestCase):
     def test_tag_create(self):
         url = '/api/tag_create'
         data = {
-            "tag": [
+            "tags": [
                 {
                     "name": "互動2",
                     "categoryId": 1
@@ -88,7 +88,7 @@ class TagTest(TestCase):
         expect = {
                 'userId': 1,
                 'userName': 'user01',
-                'newsTag': [
+                'newsTags': [
                     {'id': 1,
                      'name': '互動',
                      'categoryId': 1,

@@ -17,7 +17,7 @@ class CommonView(APIView):
         data = {
             "userId": self.request.user.id,
             "userName": self.request.user.name,
-            "newsTag": serializers.TagWithCategorySerializer(news_tags, many=True).data,
+            "newsTags": serializers.TagWithCategorySerializer(news_tags, many=True).data,
         }
         return Response(data, status=status.HTTP_200_OK)
 
@@ -32,8 +32,8 @@ class TagAndCategoryList(APIView):
         categories = Category.objects.all()
 
         data = {
-            "tag": serializers.TagWithCategorySerializer(tags, many=True).data,
-            "category": serializers.CategorySerializer(categories, many=True).data,
+            "tags": serializers.TagWithCategorySerializer(tags, many=True).data,
+            "categories": serializers.CategorySerializer(categories, many=True).data,
         }
         return Response(data, status=status.HTTP_200_OK)
 
@@ -48,7 +48,7 @@ class TagCreate(APIView):
 
             tags = Tag.objects.select_related('category').all()
             data = {
-                "tag": serializers.TagWithCategorySerializer(tags, many=True).data,
+                "tags": serializers.TagWithCategorySerializer(tags, many=True).data,
             }
             return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

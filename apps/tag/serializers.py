@@ -38,13 +38,13 @@ class TagNameCategorySerializer(serializers.Serializer):
 
 
 class TagListCreateSerializer(serializers.Serializer):
-    tag = serializers.ListSerializer(child=TagNameCategorySerializer())
+    tags = serializers.ListSerializer(child=TagNameCategorySerializer())
 
     def create(self, validated_data):
         print(validated_data["creator_id"])
         tags = [
             Tag(name=tag['name'], category_id=tag['categoryId'], creator_id=validated_data["creator_id"])
-            for tag in validated_data['tag']]
+            for tag in validated_data['tags']]
         created_tags = Tag.objects.bulk_create(tags)
         return created_tags[0]
 
