@@ -32,7 +32,7 @@ class BannerList(APIView):
         return self.post(self, request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        queryset = Banner.objects.select_related("creator", "updater").all()
+        queryset = Banner.objects.select_related("creator", "updater").order_by("priority", "-updated_at", "-created_at").all()
         serializer = serializers.BannerListSerializer(queryset, many=True)
         data = {
             "banner": serializer.data,

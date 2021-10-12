@@ -72,10 +72,26 @@ class IndexTest(TestCase):
     @override_settings(DEBUG=True)
     @debugger_queries
     def test_list_banner(self):
+        add_list = [
+            Banner(
+                id=2, title="title02", link="company01.com", priority=3, size=0,
+                creator_id=1, created_at="2020-12-01T00:00:00Z", updated_at="2020-12-01"),
+            Banner(
+                id=3, title="title03", link="company01.com", priority=2, size=0,
+                creator_id=1, created_at="2020-02-01T00:00:00Z", updated_at="2020-03-01"),
+            Banner(
+                id=4, title="title04", link="company01.com", priority=2, size=0,
+                creator_id=1, created_at="2020-01-01T00:00:00Z", updated_at="2020-02-01"),
+        ]
+        Banner.objects.bulk_create(add_list)
+        # order: 1 3 4 2
         url = '/api/banners'
         response = self.client.post(url)
         print(response.data)
         assert response.status_code == 200
+        expect_order = [1, 3, 4, 2]
+        result_ids_order = [b["id"] for b in response.data["banner"]]
+        self.assertEqual(result_ids_order, expect_order)
 
     @override_settings(DEBUG=True)
     @debugger_queries
