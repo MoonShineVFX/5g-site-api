@@ -13,6 +13,9 @@ jobs:
       - name: Deploy to Cloud Run
         env:
           GS_BUCKET_NAME: backend-django
+          PROJECT_ID: cht-fiveg
+          REGION: asia-east1
+          DATABASE_INSTANCE: cht-fiveg-sql
         uses: google-github-actions/deploy-cloudrun@v0.6.0
         with:
           service: backend
