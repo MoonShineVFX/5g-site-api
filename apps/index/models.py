@@ -4,7 +4,7 @@ from ..tag.models import Tag
 from ..user.models import EditorBaseModel
 from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.files.storage import default_storage
+from google.cloud import exceptions
 
 
 class Setting(EditorBaseModel):
@@ -66,5 +66,7 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
         return False
 
     if not old_file == new_file:
-        if default_storage.exists(old_file.path):
-            default_storage.delete(old_file.path)
+        try:
+            old_file.storage.delete(name=old_file.name)
+        except exceptions.NotFound as e:
+            print(e)
