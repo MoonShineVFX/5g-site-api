@@ -2,20 +2,21 @@
 import datetime
 from rest_framework import serializers
 from .models import Setting, About, Banner, Partner
+from ..serializers import EditorBaseSerializer
 
 
-class AboutSerializer(serializers.ModelSerializer):
+class AboutSerializer(EditorBaseSerializer):
     class Meta:
         model = About
-        fields = '__all__'
+        fields = ('id', 'detail', 'createTime', 'updateTime', 'creator', 'updater')
 
 
-class BannerListSerializer(serializers.ModelSerializer):
+class BannerListSerializer(EditorBaseSerializer):
     imgUrl = serializers.SerializerMethodField()
 
     class Meta:
         model = Banner
-        fields = ('id', 'title', 'imgUrl', 'link', 'priority')
+        fields = ('id', 'title', 'imgUrl', 'link', 'priority', 'createTime', 'updateTime', 'creator', 'updater')
 
     def get_imgUrl(self, instance):
         return "https://storage.googleapis.com/backend-django/{}".format(instance.image) if instance.image else None
@@ -35,14 +36,14 @@ class BannerLengthSerializer(serializers.ModelSerializer):
         return data
 
 
-class BannerCreateUpdateSerializer(serializers.ModelSerializer):
+class BannerCreateUpdateSerializer(EditorBaseSerializer):
     file = serializers.ImageField(write_only=True, required=False)
     imgUrl = serializers.SerializerMethodField()
 
     class Meta:
         model = Banner
-        fields = ('id', 'title', 'imgUrl', 'file', 'link', 'priority')
-        read_only = ('id', 'imgUrl',)
+        fields = ('id', 'title', 'imgUrl', 'file', 'link', 'priority', 'createTime', 'updateTime', 'creator', 'updater')
+        read_only = ('id', 'imgUrl', 'createTime', 'updateTime', 'creator', 'updater')
 
     def create(self, validated_data):
         upload_file = validated_data.get('file', None)

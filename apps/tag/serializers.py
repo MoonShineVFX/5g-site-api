@@ -2,6 +2,7 @@
 import datetime
 from rest_framework import serializers
 from .models import Tag, Category
+from ..serializers import EditorBaseSerializer
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -16,14 +17,15 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TagWithCategorySerializer(serializers.ModelSerializer):
+class TagWithCategorySerializer(EditorBaseSerializer):
     categoryId = serializers.IntegerField(source="category_id")
     categoryKey = serializers.SerializerMethodField()
     categoryName = serializers.SerializerMethodField()
 
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'categoryId', 'categoryKey', 'categoryName')
+        fields = ('id', 'name', 'categoryId', 'categoryKey', 'categoryName',
+                  'createTime', 'updateTime', 'creator', 'updater')
 
     def get_categoryKey(self, instance):
         return instance.category.key if instance.category else None
@@ -49,14 +51,15 @@ class TagListCreateSerializer(serializers.Serializer):
         return created_tags[0]
 
 
-class TagUpdateSerializer(serializers.ModelSerializer):
+class TagUpdateSerializer(EditorBaseSerializer):
     categoryId = serializers.IntegerField(source="category_id")
     categoryKey = serializers.SerializerMethodField()
     categoryName = serializers.SerializerMethodField()
 
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'categoryId', 'categoryKey', 'categoryName', )
+        fields = ('id', 'name', 'categoryId', 'categoryKey', 'categoryName',
+                  'createTime', 'updateTime', 'creator', 'updater')
 
     def get_categoryKey(self, instance):
         return instance.category.key if instance.category else None

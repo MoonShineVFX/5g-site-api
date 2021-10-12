@@ -14,7 +14,7 @@ class AboutDetail(RetrieveAPIView):
     serializer_class = serializers.AboutSerializer
 
     def get_object(self):
-        return About.objects.first()
+        return About.objects.select_related("creator", "updater").first()
 
     def post(self, request, *args, **kwargs):
         return self.get(self, request, *args, **kwargs)
@@ -24,7 +24,7 @@ class AboutUpdate(PostUpdateView):
     serializer_class = serializers.AboutSerializer
 
     def get_object(self):
-        return About.objects.first()
+        return About.objects.select_related("creator", "updater").first()
 
 
 class BannerList(APIView):
@@ -32,7 +32,7 @@ class BannerList(APIView):
         return self.post(self, request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        queryset = Banner.objects.all()
+        queryset = Banner.objects.select_related("creator", "updater").all()
         serializer = serializers.BannerListSerializer(queryset, many=True)
         data = {
             "banner": serializer.data,
@@ -49,12 +49,12 @@ class BannerLengthSetting(WebUpdateView):
 
 
 class BannerCreate(PostCreateView):
-    queryset = Banner.objects.all()
+    queryset = Banner.objects.select_related("creator", "updater").all()
     serializer_class = serializers.BannerCreateUpdateSerializer
 
 
 class BannerUpdate(PostUpdateView):
-    queryset = Banner.objects.all()
+    queryset = Banner.objects.select_related("creator", "updater").all()
     serializer_class = serializers.BannerCreateUpdateSerializer
 
 

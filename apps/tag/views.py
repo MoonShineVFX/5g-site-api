@@ -13,7 +13,7 @@ class CommonView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-        news_tags = Tag.objects.select_related('category').filter(category_id__in=[1, 2])
+        news_tags = Tag.objects.select_related("creator", "updater", "category").filter(category_id__in=[1, 2])
         data = {
             "userId": self.request.user.id,
             "userName": self.request.user.name,
@@ -28,7 +28,7 @@ class TagAndCategoryList(APIView):
         return self.post(self, request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        tags = Tag.objects.select_related('category').all()
+        tags = Tag.objects.select_related("creator", "updater", "category").all()
         categories = Category.objects.all()
 
         data = {
@@ -46,7 +46,7 @@ class TagCreate(APIView):
         if serializer.is_valid():
             serializer.save(creator_id=self.request.user.id)
 
-            tags = Tag.objects.select_related('category').all()
+            tags = Tag.objects.select_related("creator", "updater", "category").all()
             data = {
                 "tags": serializers.TagWithCategorySerializer(tags, many=True).data,
             }
@@ -55,5 +55,5 @@ class TagCreate(APIView):
 
 
 class TagUpdate(PostUpdateView):
-    queryset = Tag.objects.all()
+    queryset = Tag.objects.select_related("creator", "updater").all()
     serializer_class = serializers.TagUpdateSerializer

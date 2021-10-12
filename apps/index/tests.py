@@ -53,6 +53,7 @@ class IndexTest(TestCase):
     def test_get_about(self):
         url = '/api/about'
         response = self.client.post(url)
+        print(response.data)
         assert response.status_code == 200
         assert response.data['detail'] == "<html>xxxxxxx</html>"
 
@@ -90,9 +91,6 @@ class IndexTest(TestCase):
         response = self.client.post(url, data=data, format='multipart')
         print(response.data)
         assert response.status_code == 201
-        expect_data = {
-            'id': 2, 'title': '標題', 'imgUrl': 'banners/test_image_3MFDwfG.jpg', 'link': 'http://google.com.tw',
-            'priority': 2}
 
     @override_settings(DEBUG=True)
     @debugger_queries
