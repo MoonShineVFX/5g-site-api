@@ -9,5 +9,5 @@ class Category(models.Model):
 
 class Tag(EditorBaseModel):
     name = models.CharField(max_length=100)
-    category = models.ForeignKey(Category, models.CASCADE)
+    category = models.ForeignKey(Category, models.CASCADE, null=True)
 

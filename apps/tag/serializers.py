@@ -33,8 +33,8 @@ class TagWithCategorySerializer(serializers.ModelSerializer):
 
 
 class TagNameCategorySerializer(serializers.Serializer):
-    name = serializers.CharField()
-    categoryId = serializers.IntegerField()
+    name = serializers.CharField(allow_blank=True)
+    categoryId = serializers.IntegerField(required=False, allow_null=True)
 
 
 class TagListCreateSerializer(serializers.Serializer):

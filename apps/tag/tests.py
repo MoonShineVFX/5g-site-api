@@ -47,13 +47,17 @@ class TagTest(TestCase):
                 {
                     "name": "5G2",
                     "categoryId": 2
+                },
+                {
+                    "name": "",
+                    "categoryId": None
                 }
             ]
         }
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
-        assert response.status_code == 201
         print(response.data)
+        assert response.status_code == 201
         assert Tag.objects.filter(name="互動2", category_id=1).exists()
         assert Tag.objects.filter(name="5G2", category_id=2).exists()
 
