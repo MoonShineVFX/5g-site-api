@@ -36,7 +36,7 @@ class BannerLengthSerializer(serializers.ModelSerializer):
 
 
 class BannerCreateUpdateSerializer(serializers.ModelSerializer):
-    file = serializers.ImageField(write_only=True, allow_null=True)
+    file = serializers.ImageField(write_only=True, required=False)
     imgUrl = serializers.SerializerMethodField()
 
     class Meta:
@@ -45,9 +45,10 @@ class BannerCreateUpdateSerializer(serializers.ModelSerializer):
         read_only = ('id', 'imgUrl',)
 
     def create(self, validated_data):
-        upload_file = validated_data['file']
-        validated_data['size'] = upload_file.size
-        validated_data['image'] = validated_data.pop('file')
+        upload_file = validated_data.get('file', None)
+        if upload_file:
+            validated_data['size'] = upload_file.size
+            validated_data['image'] = validated_data.pop('file')
         resource = self.Meta.model.objects.create(**validated_data)
         return resource
 
@@ -76,7 +77,7 @@ class PartnerSerializer(serializers.ModelSerializer):
 
 
 class PartnerCreateUpdateSerializer(serializers.ModelSerializer):
-    file = serializers.ImageField(write_only=True, allow_null=True)
+    file = serializers.ImageField(write_only=True, required=False)
     imgUrl = serializers.SerializerMethodField()
 
     class Meta:
@@ -85,13 +86,14 @@ class PartnerCreateUpdateSerializer(serializers.ModelSerializer):
         read_only = ('id', 'imgUrl',)
 
     def create(self, validated_data):
-        upload_file = validated_data['file']
-        validated_data['size'] = upload_file.size
-        validated_data['image'] = validated_data.pop('file')
+        upload_file = validated_data.get('file', None)
+        if upload_file:
+            validated_data['size'] = upload_file.size
+            validated_data['image'] = validated_data.pop('file')
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        upload_file = validated_data['file']
+        upload_file = validated_data.get('file', None)
         if upload_file:
             validated_data['size'] = upload_file.size
             validated_data['image'] = validated_data.pop('file')

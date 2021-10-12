@@ -96,6 +96,20 @@ class IndexTest(TestCase):
 
     @override_settings(DEBUG=True)
     @debugger_queries
+    def test_create_banner_without_file(self):
+        url = '/api/banner_create'
+        data = {
+            "title": "標題",
+            "link": "http://google.com.tw",
+            "priority": 2
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='json')
+        print(response.data)
+        assert response.status_code == 201
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
     def test_update_banner(self):
         url = '/api/banner_update'
         data = {
