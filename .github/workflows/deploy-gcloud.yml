@@ -11,6 +11,8 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Deploy to Cloud Run
+        env:
+          GS_BUCKET_NAME: backend-django
         uses: google-github-actions/deploy-cloudrun@v0.6.0
         with:
           service: backend

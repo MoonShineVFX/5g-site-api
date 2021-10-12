@@ -13,13 +13,13 @@ class Setting(EditorBaseModel):
 
 
 class About(EditorBaseModel):
-    detail = models.TextField(null=True)
+    detail = models.TextField(default="")
 
     objects = models.Manager()
 
 
 class Banner(EditorBaseModel):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, null=True)
     link = models.URLField()
     image = models.ImageField(upload_to='banners', null=True)
     priority = models.IntegerField(default=1)
