@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from ..shortcuts import PostCreateView, PostUpdateView, WebUpdateView
 from . import serializers
-from ..tag.serializers import TagSerializer
+from ..tag.serializers import TagNameOnlySerializer
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -67,7 +67,7 @@ class PartnerList(APIView):
         tags = Tag.objects.all()
 
         data = {
-            "tag": TagSerializer(tags, many=True).data,
+            "tag": TagNameOnlySerializer(tags, many=True).data,
             "partner": serializers.PartnerSerializer(partners, many=True).data,
         }
         return Response(data, status=status.HTTP_200_OK)
