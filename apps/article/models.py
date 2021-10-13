@@ -4,9 +4,9 @@ from ..user.models import EditorBaseModel
 
 
 class News(EditorBaseModel):
-    title = models.CharField(max_length=200, default="")
-    description = models.CharField(max_length=200, default="")
-    detail = models.TextField(null=True, default="")
+    title = models.CharField(max_length=200, default="", blank=True)
+    description = models.CharField(max_length=200, default="", blank=True)
+    detail = models.TextField(null=True, default="", blank=True)
 
     tags = models.ManyToManyField(Tag)
 

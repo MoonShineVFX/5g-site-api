@@ -69,6 +69,20 @@ class ArticleTest(TestCase):
 
     @override_settings(DEBUG=True)
     @debugger_queries
+    def test_create_news_blank(self):
+        url = '/api/news_create'
+        data = {
+            "title": "",
+            "description": "",
+            "detail": "",
+            "tags": [1, 2]
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='json')
+        assert response.status_code == 201
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
     def test_update_news(self):
         url = '/api/news_update'
         data = {
