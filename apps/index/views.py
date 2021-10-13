@@ -63,7 +63,7 @@ class PartnerList(APIView):
         return self.post(self, request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        partners = Partner.objects.prefetch_related('tags').all()
+        partners = Partner.objects.select_related("creator", "updater").prefetch_related('tags').all()
         tags = Tag.objects.all()
 
         data = {
@@ -74,10 +74,10 @@ class PartnerList(APIView):
 
 
 class PartnerCreate(PostCreateView):
-    queryset = Partner.objects.all()
+    queryset = Partner.objects.select_related("creator", "updater").prefetch_related('tags').all()
     serializer_class = serializers.PartnerCreateUpdateSerializer
 
 
 class PartnerUpdate(PostUpdateView):
-    queryset = Partner.objects.all()
+    queryset = Partner.objects.select_related("creator", "updater").prefetch_related('tags').all()
     serializer_class = serializers.PartnerCreateUpdateSerializer

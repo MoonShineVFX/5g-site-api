@@ -64,26 +64,28 @@ class BannerCreateUpdateSerializer(EditorBaseSerializer):
         return "https://storage.googleapis.com/backend-django/{}".format(instance.image) if instance.image else None
 
 
-class PartnerSerializer(serializers.ModelSerializer):
+class PartnerSerializer(EditorBaseSerializer):
     imgUrl = serializers.SerializerMethodField()
     tags = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Partner
-        fields = ('id',  'imgUrl', 'link', 'name', 'phone', 'email', 'description', 'tags')
+        fields = ('id',  'imgUrl', 'link', 'name', 'phone', 'email', 'description', 'tags',
+                  'createTime', 'updateTime', 'creator', 'updater')
         read_only = ('id', 'imgUrl',)
 
     def get_imgUrl(self, instance):
         return "https://storage.googleapis.com/backend-django/{}".format(instance.image) if instance.image else None
 
 
-class PartnerCreateUpdateSerializer(serializers.ModelSerializer):
+class PartnerCreateUpdateSerializer(EditorBaseSerializer):
     file = serializers.ImageField(write_only=True, required=False)
     imgUrl = serializers.SerializerMethodField()
 
     class Meta:
         model = Partner
-        fields = ('id', 'imgUrl', 'file', 'link', 'name', 'phone', 'email', 'description', 'tags')
+        fields = ('id', 'imgUrl', 'file', 'link', 'name', 'phone', 'email', 'description', 'tags',
+                  'createTime', 'updateTime', 'creator', 'updater')
         read_only = ('id', 'imgUrl',)
 
     def create(self, validated_data):
