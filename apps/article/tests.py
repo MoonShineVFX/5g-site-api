@@ -17,7 +17,7 @@ class ArticleTest(TestCase):
         self.user = User.objects.create(id=1, name="user01", email="user01@mail.com")
         setup_categories_tags()
         n1 = News.objects.create(id=1, title="news01", description="description", detail="<html>xxxxxxx</html>",
-                                 creator_id=1)
+                                 creator_id=1, is_hot=True, hot_at="2020-01-01 00:00:00")
         n2 = News.objects.create(id=2, title="news02", description="description", detail="<html>xxxxxxx</html>",
                                  creator_id=1)
         n1.tags.add(1)
@@ -48,6 +48,7 @@ class ArticleTest(TestCase):
             "title": "new title",
             "description": "description",
             "detail": "<html>news</html>",
+            "isHot": True,
             "tags": [1, 2]
         }
         self.client.force_authenticate(user=self.user)
@@ -55,9 +56,12 @@ class ArticleTest(TestCase):
         assert response.status_code == 201
         assert response.data == {}
         del data["tags"]
+        del data["isHot"]
+        data["is_hot"] = True
         data["creator_id"] = self.user.id
         news = News.objects.filter(**data).first()
         assert news is not None
+        assert news.hot_at is not None
         tag_id_list = [tag.id for tag in news.tags.all()]
         assert tag_id_list == [1, 2]
 
@@ -75,6 +79,7 @@ class ArticleTest(TestCase):
             "title": "",
             "description": "",
             "detail": "",
+            "isHot": False,
             "tags": [1, 2]
         }
         self.client.force_authenticate(user=self.user)
@@ -90,6 +95,7 @@ class ArticleTest(TestCase):
             "title": "new title",
             "description": "description",
             "detail": "<html>news</html>",
+            "isHot": False,
             "tags": [1, 2]
         }
         self.client.force_authenticate(user=self.user)
@@ -97,6 +103,9 @@ class ArticleTest(TestCase):
         assert response.status_code == 200
         assert response.data == {}
         del data["tags"]
+        del data["isHot"]
+        data["is_hot"] = False
+        data["hot_at"] = None
         data["updater_id"] = self.user.id
         news = News.objects.filter(**data).first()
         assert news is not None
