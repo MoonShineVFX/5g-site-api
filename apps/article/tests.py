@@ -6,6 +6,7 @@ from ..shortcuts import debugger_queries
 
 from .models import News, Image
 from ..user.models import User
+from ..tag.models import Tag
 
 from ..tag.tests import setup_categories_tags
 from ..index.tests import get_test_image_file
@@ -128,3 +129,57 @@ class ArticleTest(TestCase):
         img = Image.objects.first()
         assert img is not None
         assert img.size != 0
+
+
+class WebArticleTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create(id=1, name="user01", email="user01@mail.com")
+        setup_categories_tags()
+        Tag.objects.create(id=3, name="tag3", category_id=1, creator_id=self.user.id)
+
+        Tag.objects.create(id=4, name="tag4", category_id=2, creator_id=self.user.id)
+        Tag.objects.create(id=5, name="tag5", category_id=2, creator_id=self.user.id)
+
+        n1 = News.objects.create(id=1, title="news01", description="description", detail="<html>xxxxxxx</html>",
+                                 creator_id=1, is_hot=True, hot_at="2020-01-01 00:00:00")
+        n2 = News.objects.create(id=2, title="news02", description="description", detail="<html>xxxxxxx</html>",
+                                 creator_id=1)
+        News.objects.create(id=3, title="news03", description="description", detail="<html>xxxxxxx</html>",
+                                 creator_id=1)
+        n1.tags.add(1, 3)
+        n2.tags.add(2, 4)
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_get_web_news_list(self):
+        url = '/api/web_news?cate=newsIndustry'
+        response = self.client.get(url)
+        print(response.data)
+        assert response.status_code == 200
+
+        url = '/api/web_news?cate=newsIndustry&tag=5'
+        response = self.client.get(url)
+        print(response.data)
+        assert response.status_code == 200
+        assert response.data['list'] == []
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_get_web_news_detail(self):
+        url = '/api/web_news/2'
+        response = self.client.get(url)
+        print(response.data)
+        assert response.status_code == 200
+        assert response.data['otherNews'][0]["id"] == 1
+        assert response.data['otherNews'][1]["id"] == 3
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_get_web_news_detail_with_end(self):
+        url = '/api/web_news/3'
+        response = self.client.get(url)
+        print(response.data)
+        assert response.status_code == 200
+        assert response.data['otherNews'][0]["id"] == 2
+        assert len(response.data['otherNews']) == 1

@@ -19,3 +19,14 @@ class EditorBaseSerializer(serializers.ModelSerializer):
 
     def get_updater(self, instance):
         return instance.updater.username if instance.updater else ""
+
+
+class EditTimeBaseSerializer(serializers.ModelSerializer):
+    createTime = serializers.SerializerMethodField()
+    updateTime = serializers.SerializerMethodField()
+
+    def get_createTime(self, instance):
+        return instance.created_at if instance.created_at else ""
+
+    def get_updateTime(self, instance):
+        return instance.updated_at if instance.updated_at else ""
