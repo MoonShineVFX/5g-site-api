@@ -217,3 +217,22 @@ class IndexTest(TestCase):
         tag_id_list = [tag.id for tag in p.tags.all()]
         assert tag_id_list == [1]
 
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_get_web_partner(self):
+        url = '/api/web_partners?tag=all'
+        response = self.client.get(url)
+        print(response.data)
+        assert response.data["count"] == 2
+        assert response.status_code == 200
+
+        url = '/api/web_partners?tag=tal'
+        response = self.client.get(url)
+        assert response.data["count"] == 0
+        assert response.status_code == 200
+
+        url = '/api/web_partners?tag=1'
+        response = self.client.get(url)
+        print(response.data)
+        assert response.data["count"] == 2
+        assert response.status_code == 200

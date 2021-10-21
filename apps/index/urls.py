@@ -13,4 +13,6 @@ urlpatterns = [
     url(r'^partners$', views.PartnerList.as_view(), name='partner-list'),
     url(r'^partner_create$', views.PartnerCreate.as_view(), name='partner-create'),
     url(r'^partner_update$', views.PartnerUpdate.as_view(), name='partner-update'),
+
+    url(r'^web_partners$', views.WebPartnerList.as_view(), name='web-partner-list'),
 ]

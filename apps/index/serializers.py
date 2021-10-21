@@ -104,3 +104,15 @@ class PartnerCreateUpdateSerializer(EditorBaseSerializer):
 
     def get_imgUrl(self, instance):
         return "https://storage.googleapis.com/backend-django/{}".format(instance.image) if instance.image else None
+
+
+class WebPartnerSerializer(serializers.ModelSerializer):
+    imgUrl = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Partner
+        fields = ('id', 'imgUrl', 'link', 'name', 'phone', 'email', 'description')
+        read_only = ('id', 'imgUrl',)
+
+    def get_imgUrl(self, instance):
+        return "https://storage.googleapis.com/backend-django/{}".format(instance.image) if instance.image else None

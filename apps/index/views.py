@@ -1,13 +1,13 @@
 from .models import About, Banner, Partner, Setting
 from ..tag.models import Tag
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from ..shortcuts import PostCreateView, PostUpdateView, WebUpdateView
+from ..pagination import PartnerPagination
 from . import serializers
 from ..tag.serializers import TagNameOnlySerializer
-from rest_framework.permissions import IsAuthenticated
 
 
 class AboutDetail(RetrieveAPIView):
@@ -81,3 +81,28 @@ class PartnerCreate(PostCreateView):
 class PartnerUpdate(PostUpdateView):
     queryset = Partner.objects.select_related("creator", "updater").prefetch_related('tags').all()
     serializer_class = serializers.PartnerCreateUpdateSerializer
+
+
+class WebPartnerList(ListAPIView):
+    serializer_class = serializers.WebPartnerSerializer
+    queryset = Partner.objects.all()
+    pagination_class = PartnerPagination
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        tag_key = self.request.query_params.get('tag', 'all')
+        if tag_key == 'all':
+            pass
+        else:
+            try:
+                int(tag_key)
+                queryset = queryset.filter(tags__id=tag_key)
+            except ValueError:
+                queryset = queryset.none()
+
+        page = self.paginate_queryset(queryset.distinct().order_by('-id'))
+        serializer = self.get_serializer(page, many=True)
+        response = self.get_paginated_response(serializer.data)
+
+        return response
