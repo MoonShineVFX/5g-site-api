@@ -64,10 +64,10 @@ class PartnerList(APIView):
 
     def post(self, request, *args, **kwargs):
         partners = Partner.objects.select_related("creator", "updater").prefetch_related('tags').all()
-        tags = Tag.objects.all()
+        partner_tags = Tag.objects.filter(category_id=3)
 
         data = {
-            "tag": TagNameOnlySerializer(tags, many=True).data,
+            "tag": TagNameOnlySerializer(partner_tags, many=True).data,
             "partner": serializers.PartnerSerializer(partners, many=True).data,
         }
         return Response(data, status=status.HTTP_200_OK)
@@ -105,4 +105,9 @@ class WebPartnerList(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         response = self.get_paginated_response(serializer.data)
 
+        partner_tags = Tag.objects.filter(category_id=3)
+        data = {
+            "tag": TagNameOnlySerializer(partner_tags, many=True).data,
+        }
+        response.data.update(data)
         return response

@@ -145,10 +145,11 @@ class WebArticleTest(TestCase):
                                  creator_id=1, is_hot=True, hot_at="2020-01-01 00:00:00")
         n2 = News.objects.create(id=2, title="news02", description="description", detail="<html>xxxxxxx</html>",
                                  creator_id=1)
-        News.objects.create(id=3, title="news03", description="description", detail="<html>xxxxxxx</html>",
+        n3 = News.objects.create(id=3, title="news03", description="description", detail="<html>xxxxxxx</html>",
                                  creator_id=1)
         n1.tags.add(1, 3)
         n2.tags.add(2, 4)
+        n3.tags.add(1)
 
     @override_settings(DEBUG=True)
     @debugger_queries
@@ -171,8 +172,7 @@ class WebArticleTest(TestCase):
         response = self.client.get(url)
         print(response.data)
         assert response.status_code == 200
-        assert response.data['otherNews'][0]["id"] == 1
-        assert response.data['otherNews'][1]["id"] == 3
+        assert response.data['otherNews'] == []
 
     @override_settings(DEBUG=True)
     @debugger_queries
@@ -181,5 +181,5 @@ class WebArticleTest(TestCase):
         response = self.client.get(url)
         print(response.data)
         assert response.status_code == 200
-        assert response.data['otherNews'][0]["id"] == 2
+        assert response.data['otherNews'][0]["id"] == 1
         assert len(response.data['otherNews']) == 1

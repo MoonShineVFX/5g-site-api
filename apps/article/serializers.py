@@ -118,9 +118,13 @@ class WebNewsDetailSerializer(EditTimeBaseSerializer, CategoryMixin):
 
     def get_otherNews(self, instance):
         data = []
+        prev = None
+        next = None
 
-        prev = News.objects.filter(id__lt=instance.id).order_by('id').last()
-        next = News.objects.filter(id__gt=instance.id).order_by('id').first()
+        category_id = instance.tags.all()[0].category_id if instance.tags.all() else None
+        if category_id:
+            prev = News.objects.filter(id__lt=instance.id, tags__category_id=category_id).order_by('id').last()
+            next = News.objects.filter(id__gt=instance.id, tags__category_id=category_id).order_by('id').first()
 
         if prev:
             data.append(OtherNewsSerializer(prev).data)
