@@ -67,8 +67,8 @@ class PartnerList(APIView):
         partner_tags = Tag.objects.filter(category_id=3)
 
         data = {
-            "tag": TagNameOnlySerializer(partner_tags, many=True).data,
-            "partner": serializers.PartnerSerializer(partners, many=True).data,
+            "tags": TagNameOnlySerializer(partner_tags, many=True).data,
+            "partners": serializers.PartnerSerializer(partners, many=True).data,
         }
         return Response(data, status=status.HTTP_200_OK)
 
@@ -107,7 +107,7 @@ class WebPartnerList(ListAPIView):
 
         partner_tags = Tag.objects.filter(category_id=3)
         data = {
-            "tag": TagNameOnlySerializer(partner_tags, many=True).data,
+            "tags": TagNameOnlySerializer(partner_tags, many=True).data,
         }
         response.data.update(data)
         return response
