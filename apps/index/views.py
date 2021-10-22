@@ -1,4 +1,5 @@
 from .models import About, Banner, Partner, Setting
+from ..article.models import News
 from ..tag.models import Tag
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.views import APIView
@@ -111,3 +112,24 @@ class WebPartnerList(ListAPIView):
         }
         response.data.update(data)
         return response
+
+
+class WebIndexList(APIView):
+    def get(self, request, *args, **kwargs):
+        setting = Setting.objects.first()
+        banners = Banner.objects.select_related("creator", "updater").order_by(
+            "priority", "-updated_at", "-created_at").all()[:setting.banner_length]
+        news = News.objects.filter(tags__category_id=1).order_by("-hot_at", "-created_at")[:3]
+        news_industries = News.objects.filter(tags__category_id=2).order_by("-hot_at", "-created_at")[:3]
+        partner_tags = Tag.objects.filter(category_id=3)
+
+        data = {
+            "banners": serializers.WebIndexBannerSerializer(banners, many=True).data,
+            "demoPlaces": [],
+            "news": {
+                "news": serializers.WebIndexNewsSerializer(news, many=True).data,
+                "newsIndustries": serializers.WebIndexNewsSerializer(news_industries, many=True).data,
+            },
+            "partnerTags": TagNameOnlySerializer(partner_tags, many=True).data
+        }
+        return Response(data, status=status.HTTP_200_OK)

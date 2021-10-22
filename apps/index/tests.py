@@ -236,3 +236,11 @@ class IndexTest(TestCase):
         print(response.data)
         assert response.data["count"] == 2
         assert response.status_code == 200
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_get_web_index(self):
+        url = '/api/web_index'
+        response = self.client.get(url)
+        print(response.data)
+        assert response.status_code == 200

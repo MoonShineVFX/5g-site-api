@@ -2,6 +2,7 @@
 import datetime
 from rest_framework import serializers
 from .models import Setting, About, Banner, Partner
+from ..article.models import News
 from ..serializers import EditorBaseSerializer
 
 
@@ -116,3 +117,26 @@ class WebPartnerSerializer(serializers.ModelSerializer):
 
     def get_imgUrl(self, instance):
         return "https://storage.googleapis.com/backend-django/{}".format(instance.image) if instance.image else None
+
+
+class WebIndexBannerSerializer(serializers.ModelSerializer):
+    imgUrl = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Banner
+        fields = ('id', 'title', 'imgUrl', 'link')
+
+    def get_imgUrl(self, instance):
+        return "https://storage.googleapis.com/backend-django/{}".format(instance.image) if instance.image else None
+
+
+class WebIndexNewsSerializer(serializers.ModelSerializer):
+    isHot = serializers.BooleanField(source="is_hot")
+    createTime = serializers.SerializerMethodField()
+
+    class Meta:
+        model = News
+        fields = ('id', 'title', 'createTime', 'isHot')
+
+    def get_createTime(self, instance):
+        return instance.created_at if instance.created_at else ""
