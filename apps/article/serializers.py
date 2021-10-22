@@ -3,22 +3,7 @@ from django.utils import timezone
 from rest_framework import serializers
 from .models import News, Image
 from ..serializers import EditorBaseSerializer, EditTimeBaseSerializer
-from ..tag.serializers import TagNameOnlySerializer
-
-
-class CategoryMixin(serializers.Serializer):
-    categoryId = serializers.SerializerMethodField()
-    categoryKey = serializers.SerializerMethodField()
-    categoryName = serializers.SerializerMethodField()
-
-    def get_categoryId(self, instance):
-        return instance.tags.all()[0].category_id if instance.tags.all() else None
-
-    def get_categoryKey(self, instance):
-        return instance.tags.all()[0].category.key if instance.tags.all() else None
-
-    def get_categoryName(self, instance):
-        return instance.tags.all()[0].category.name if instance.tags.all() else None
+from ..tag.serializers import TagNameOnlySerializer, CategoryMixin
 
 
 class NewsSerializer(EditorBaseSerializer):

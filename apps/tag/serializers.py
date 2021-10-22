@@ -5,6 +5,21 @@ from .models import Tag, Category
 from ..serializers import EditorBaseSerializer
 
 
+class CategoryMixin(serializers.Serializer):
+    categoryId = serializers.SerializerMethodField()
+    categoryKey = serializers.SerializerMethodField()
+    categoryName = serializers.SerializerMethodField()
+
+    def get_categoryId(self, instance):
+        return instance.tags.all()[0].category_id if instance.tags.all() else None
+
+    def get_categoryKey(self, instance):
+        return instance.tags.all()[0].category.key if instance.tags.all() else None
+
+    def get_categoryName(self, instance):
+        return instance.tags.all()[0].category.name if instance.tags.all() else None
+
+
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag

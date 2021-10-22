@@ -44,3 +44,5 @@ class EditorBaseModel(models.Model):
 
     class Meta:
         abstract = True
+
+    objects = models.Manager()

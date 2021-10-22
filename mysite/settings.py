@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'apps.tag',
     'apps.index',
     'apps.article',
+    'apps.demonstration',
 ]
 
 AUTH_USER_MODEL = 'user.User'
