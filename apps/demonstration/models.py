@@ -5,16 +5,13 @@ from ..user.models import EditorBaseModel
 class Demonstration(EditorBaseModel):
     title = models.CharField(max_length=200, default="", blank=True)
     location_url = models.URLField(null=True)
-    video_url = models.URLField(null=True)
+    address = models.CharField(max_length=200, default="", blank=True)
+    video_iframe = models.TextField(null=True, default="", blank=True)
     description = models.CharField(max_length=200, default="", blank=True)
     type = models.CharField(max_length=10, default="5g")
     preview = models.ImageField(upload_to='demonstrations/images', null=True)
 
     contact = models.ForeignKey('Contact', on_delete=models.CASCADE)
-
-    by_mrt = models.TextField(null=True, default="", blank=True)
-    by_bus = models.TextField(null=True, default="", blank=True)
-    by_drive = models.TextField(null=True, default="", blank=True)
 
 
 class Contact(EditorBaseModel):

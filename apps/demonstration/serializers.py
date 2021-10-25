@@ -54,10 +54,7 @@ class WebDemonstrationListSerializer(serializers.ModelSerializer):
 
 class WebDemonstrationDetailSerializer(serializers.ModelSerializer):
     locationUrl = serializers.CharField(source="location_url")
-    videoUrl = serializers.CharField(source="video_url")
-    byMRT = serializers.CharField(source="by_mrt")
-    byBus = serializers.CharField(source="by_bus")
-    byDrive = serializers.CharField(source="by_drive")
+    videoIframe = serializers.CharField(source="video_iframe")
 
     contact = ContactSerializer()
     images = ImageSerializer(many=True, read_only=True)
@@ -66,6 +63,5 @@ class WebDemonstrationDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Demonstration
-        fields = ('id', 'title', 'locationUrl', 'description', 'type',
-                  'byMRT', 'byBus', 'byDrive', 'videoUrl',
+        fields = ('id', 'title', 'locationUrl', 'address', 'description', 'type', 'videoIframe',
                   'contact', 'images', 'links', 'files')
