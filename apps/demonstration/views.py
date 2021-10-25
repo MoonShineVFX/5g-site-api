@@ -1,6 +1,6 @@
 from .models import Demonstration
 from . import serializers
-from ..pagination import NewsPagination
+from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 
@@ -11,6 +11,11 @@ class WebDemonstrationList(ListAPIView):
     def get_queryset(self):
         type = self.request.query_params.get('type', '5g')
         return self.queryset.filter(type=type)
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {"list": response.data}
+        return response
 
 
 class WebDemonstrationDetail(RetrieveAPIView):

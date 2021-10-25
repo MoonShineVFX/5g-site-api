@@ -119,8 +119,8 @@ class WebIndexList(APIView):
         setting = Setting.objects.first()
         banners = Banner.objects.select_related("creator", "updater").order_by(
             "priority", "-updated_at", "-created_at").all()[:setting.banner_length]
-        news = News.objects.filter(tags__category_id=1).order_by("-hot_at", "-created_at")[:3]
-        news_industries = News.objects.filter(tags__category_id=2).order_by("-hot_at", "-created_at")[:3]
+        news = News.objects.filter(tags__category_id=1).order_by("-hot_at", "-created_at").distinct()[:3]
+        news_industries = News.objects.filter(tags__category_id=2).order_by("-hot_at", "-created_at").distinct()[:3]
         partner_tags = Tag.objects.filter(category_id=3)
 
         data = {
