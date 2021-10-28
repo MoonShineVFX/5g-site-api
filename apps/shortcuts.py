@@ -96,6 +96,9 @@ class PostUpdateView(GenericAPIView, mixins.UpdateModelMixin):
 class PostDestroyView(DestroyAPIView):
     permission_classes = (IsAuthenticated, )
 
+    def post(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
     def get_object(self):
         return get_object_or_404(self.queryset, id=self.request.data.get('id', None))
 

@@ -2,7 +2,7 @@ from .models import Demonstration, Image, File
 from . import serializers
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, RetrieveAPIView
-from ..shortcuts import WebCreateView, WebUpdateView, PostCreateView, PostUpdateView, PostDestroyView
+from ..shortcuts import WebCreateView, WebUpdateView, PostCreateView, PostDestroyView
 from django.shortcuts import get_object_or_404
 
 
@@ -51,6 +51,14 @@ class ImageUpload(PostCreateView):
 
 class FileUpload(PostCreateView):
     serializer_class = serializers.FileUploadSerializer
+    queryset = File.objects.all()
+
+
+class ImageDelete(PostDestroyView):
+    queryset = Image.objects.all()
+
+
+class FileDelete(PostDestroyView):
     queryset = File.objects.all()
 
 
