@@ -111,6 +111,7 @@ class WebCreateView(GenericAPIView):
 
 class WebUpdateView(GenericAPIView):
     permission_classes = (IsAuthenticated, )
+    lookup_field = 'id'
 
     def get_extra_attrs(self):
         return {"updater_id": self.request.user.id, "updated_at": timezone.now()}

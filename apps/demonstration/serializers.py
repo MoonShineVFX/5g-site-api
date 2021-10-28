@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from rest_framework import serializers
-from .models import Demonstration, Contact, Link, Image, File
+from .models import Demonstration, Link, Image, File
+from ..serializers import EditorBaseSerializer
 
 
-class ContactSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Contact
-        fields = ('unit', 'name', 'phone', 'fax', 'email')
+class ContactSerializer(serializers.Serializer):
+    unit = serializers.CharField(source="contact_name")
+    name = serializers.CharField(source="contact_unit")
+    phone = serializers.CharField(source="contact_phone")
+    fax = serializers.CharField(source="contact_fax")
+    email = serializers.CharField(source="contact_email")
 
 
 class LinkSerializer(serializers.ModelSerializer):
@@ -42,14 +45,11 @@ class FileSerializer(serializers.ModelSerializer):
 
 
 class WebDemonstrationListSerializer(serializers.ModelSerializer):
-    imgUrl = serializers.SerializerMethodField()
+    imgUrl = serializers.CharField(source="thumb")
 
     class Meta:
         model = Demonstration
         fields = ('id', 'title', 'imgUrl')
-
-    def get_imgUrl(self, instance):
-        return "https://storage.googleapis.com/backend-django/{}".format(instance.preview) if instance.preview else None
 
 
 class WebDemonstrationDetailSerializer(serializers.ModelSerializer):
@@ -57,11 +57,47 @@ class WebDemonstrationDetailSerializer(serializers.ModelSerializer):
     videoIframe = serializers.CharField(source="video_iframe")
 
     contact = ContactSerializer()
-    images = ImageSerializer(many=True, read_only=True)
-    links = LinkSerializer(many=True, read_only=True)
-    files = FileSerializer(many=True, read_only=True)
+    images = ImageSerializer(many=True)
+    links = LinkSerializer(many=True)
+    files = FileSerializer(many=True)
 
     class Meta:
         model = Demonstration
         fields = ('id', 'title', 'locationUrl', 'address', 'description', 'type', 'videoIframe',
                   'contact', 'images', 'links', 'files')
+
+
+class DemonstrationListSerializer(EditorBaseSerializer):
+    imgUrl = serializers.CharField(source="thumb")
+    contact = ContactSerializer()
+
+    class Meta:
+        model = Demonstration
+        fields = ('id', 'title', 'imgUrl', 'address', 'type', 'contact',
+                  'createTime', 'updateTime', 'creator', 'updater')
+
+
+class DemonstrationDetailSerializer(WebDemonstrationDetailSerializer, EditorBaseSerializer):
+    imgUrl = serializers.CharField(source="thumb")
+
+    class Meta:
+        model = Demonstration
+        fields = ('id', 'title', 'locationUrl', 'address', 'description', 'type', 'videoIframe', 'imgUrl',
+                  'contact', 'images', 'links', 'files',
+                  'createTime', 'updateTime', 'creator', 'updater')
+
+
+class DemonstrationCreateUpdateSerializer(EditorBaseSerializer):
+    locationUrl = serializers.CharField(source="location_url")
+    videoIframe = serializers.CharField(source="video_iframe")
+    contactUnit = serializers.CharField(source="contact_name")
+    contactName = serializers.CharField(source="contact_unit")
+    contactPhone = serializers.CharField(source="contact_phone")
+    contactFax = serializers.CharField(source="contact_fax")
+    contactEmail = serializers.CharField(source="contact_email")
+
+    class Meta:
+        model = Demonstration
+        fields = ('id', 'title', 'locationUrl', 'address', 'description', 'type', 'videoIframe', 'thumb',
+                  'contactUnit', 'contactName', 'contactPhone', 'contactFax', 'contactEmail',
+                  'createTime', 'updateTime', 'creator', 'updater')
