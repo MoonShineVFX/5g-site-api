@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from django.test.utils import override_settings
 from ..shortcuts import debugger_queries
-from .models import Demonstration, Link, Image
+from .models import Demonstration, Image
 from .models import File as DemoFile
 from ..user.models import User
 
@@ -37,9 +37,6 @@ class DemonstrationTest(TestCase):
             id=2, title="title02", thumb=get_upload_file(file_type='.jpg'), type="5g", creator_id=1)
         Demonstration.objects.create(
             id=3, title="title03", thumb=get_upload_file(file_type='.jpg'), type="tech", creator_id=1)
-
-        Link.objects.create(id=1, name="url01", url="http://google.com.tw", demonstration_id=1, creator_id=1)
-        Link.objects.create(id=2, name="url02", url="http://google.com.tw", demonstration_id=1, creator_id=1)
 
         Image.objects.create(id=1, file=get_upload_file(file_type='.jpg'), size=1, demonstration_id=1, creator_id=1)
         Image.objects.create(id=2, file=get_upload_file(file_type='.jpg'), size=1, demonstration_id=1, creator_id=1)
@@ -97,7 +94,10 @@ class DemonstrationTest(TestCase):
             "contactFax": "(02)2389-0636",
             "contactEmail": "owen.tzeng@tvca.org.tw",
             "videoIframe": "videoIframe",
-            "thumb": get_test_image_file()
+            "thumb": get_test_image_file(),
+            "byMRT": "",
+            "byDrive": ""
+
         }
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='multipart')
@@ -122,10 +122,47 @@ class DemonstrationTest(TestCase):
             "contactFax": "(02)2389-0636",
             "contactEmail": "owen.tzeng@tvca.org.tw",
             "videoIframe": "videoIframe",
-            "thumb": get_test_image_file()
+            "thumb": get_test_image_file(),
+            "byMRT": "",
+            "byDrive": ""
+
         }
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='multipart')
         print(response.data)
         assert response.status_code == 200
         assert Demonstration.objects.filter(title=data["title"], updater_id=self.user.id).exists()
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_upload_image(self):
+        url = '/api/demo_place_image_upload'
+        data = {
+            "demoPlaceId": 1,
+            "file": get_test_image_file(),
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='multipart')
+        print(response.data)
+        assert response.status_code == 201
+        assert "imgUrl" in response.data
+        img = Image.objects.filter(id=response.data["id"], demonstration_id=1)[0]
+        assert img is not None
+        assert img.size != 0
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_upload_file(self):
+        url = '/api/demo_place_file_upload'
+        data = {
+            "demoPlaceId": 1,
+            "file": get_test_image_file(),
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='multipart')
+        print(response.data)
+        assert response.status_code == 201
+        assert "url" in response.data
+        upload_file = DemoFile.objects.filter(id=response.data["id"], demonstration_id=1)[0]
+        assert upload_file is not None
+        assert upload_file.size != 0

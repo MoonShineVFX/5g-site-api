@@ -13,12 +13,16 @@ class Demonstration(EditorBaseModel):
     description = models.CharField(max_length=200, default="", blank=True)
     type = models.CharField(max_length=10, default="5g")
     thumb = models.ImageField(upload_to='demonstrations/images', null=True)
+    link = models.URLField(null=True)
 
     contact_name = models.CharField(max_length=200, null=True)
     contact_unit = models.CharField(max_length=200, null=True)
     contact_phone = models.CharField(max_length=50, null=True)
     contact_fax = models.CharField(max_length=50, null=True)
     contact_email = models.EmailField(null=True)
+
+    by_mrt = models.TextField(null=True, default="", blank=True)
+    by_drive = models.TextField(null=True, default="", blank=True)
 
     @property
     def contact(self):
@@ -29,13 +33,6 @@ class Demonstration(EditorBaseModel):
             "contact_fax": self.contact_fax,
             "contact_email": self.contact_email
         }
-
-
-class Link(EditorBaseModel):
-    name = models.CharField(max_length=200)
-    url = models.URLField()
-
-    demonstration = models.ForeignKey(Demonstration, related_name="links", on_delete=models.CASCADE)
 
 
 class Image(EditorBaseModel):

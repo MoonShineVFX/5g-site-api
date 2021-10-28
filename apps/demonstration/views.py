@@ -1,8 +1,8 @@
-from .models import Demonstration
+from .models import Demonstration, Image, File
 from . import serializers
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, RetrieveAPIView
-from ..shortcuts import WebCreateView, WebUpdateView
+from ..shortcuts import WebCreateView, WebUpdateView, PostCreateView, PostUpdateView, PostDestroyView
 from django.shortcuts import get_object_or_404
 
 
@@ -27,7 +27,7 @@ class DemonstrationList(ListAPIView):
 
 class DemonstrationDetail(RetrieveAPIView):
     queryset = Demonstration.objects.select_related(
-        "creator", "updater").prefetch_related('links', 'images', 'files').all()
+        "creator", "updater").prefetch_related('images', 'files').all()
     serializer_class = serializers.DemonstrationDetailSerializer
 
 
@@ -42,6 +42,16 @@ class DemonstrationUpdate(WebUpdateView):
 
     def get_object(self):
         return get_object_or_404(self.queryset, id=self.request.data.get('id', None))
+
+
+class ImageUpload(PostCreateView):
+    serializer_class = serializers.ImageUploadSerializer
+    queryset = Image.objects.all()
+
+
+class FileUpload(PostCreateView):
+    serializer_class = serializers.FileUploadSerializer
+    queryset = File.objects.all()
 
 
 class WebDemonstrationList(ListAPIView):
@@ -59,5 +69,5 @@ class WebDemonstrationList(ListAPIView):
 
 
 class WebDemonstrationDetail(RetrieveAPIView):
-    queryset = Demonstration.objects.prefetch_related('links', 'images', 'files').all()
+    queryset = Demonstration.objects.prefetch_related('images', 'files').all()
     serializer_class = serializers.WebDemonstrationDetailSerializer
