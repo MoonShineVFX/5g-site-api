@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.utils import timezone
 from rest_framework import serializers
-from .models import Policy, Contact
+from .models import Policy
 from ..serializers import EditorBaseSerializer, EditTimeBaseSerializer
 from ..tag.serializers import TagNameOnlySerializer, CategoryMixin
 from ..demonstration.serializers import ContactSerializer

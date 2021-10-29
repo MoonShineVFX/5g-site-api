@@ -2,7 +2,8 @@ from django.db import models
 from ..user.models import EditorBaseModel
 from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist
-from google.cloud import exceptions
+from google.cloud import exceptions, storage
+from django.conf import settings
 
 
 class Demonstration(EditorBaseModel):
@@ -13,7 +14,8 @@ class Demonstration(EditorBaseModel):
     description = models.CharField(max_length=200, default="", blank=True)
     type = models.CharField(max_length=10, default="5g")
     thumb = models.ImageField(upload_to='demonstrations/images', null=True)
-    link = models.URLField(null=True)
+    website_url = models.URLField(null=True)
+    website_name = models.CharField(max_length=50, null=True)
 
     contact_name = models.CharField(max_length=200, null=True)
     contact_unit = models.CharField(max_length=200, null=True)
@@ -43,7 +45,7 @@ class Image(EditorBaseModel):
 
 
 class File(EditorBaseModel):
-    file = models.ImageField(upload_to='demonstrations/files', null=True)
+    file = models.FileField(upload_to='demonstrations/files', null=True)
     size = models.IntegerField(null=True)
     type = models.CharField(max_length=50)
 
@@ -77,3 +79,15 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
             old_file.storage.delete(name=old_file.name)
         except exceptions.NotFound as e:
             print(e)
+
+
+@receiver(models.signals.post_delete, sender=Image)
+@receiver(models.signals.post_delete, sender=File)
+def auto_delete_file(sender, instance, **kargs):
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(settings.GS_BUCKET_NAME)
+    blob = bucket.blob(instance.file.name)
+    try:
+        blob.delete()
+    except exceptions.NotFound as e:
+        print(e)

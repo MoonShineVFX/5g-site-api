@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from django.test.utils import override_settings
 from ..shortcuts import debugger_queries
-from .models import Policy, Contact
+from .models import Policy
 from ..user.models import User
 from ..tag.tests import setup_categories_tags, Tag
 
@@ -16,15 +16,12 @@ class PolicyTest(TestCase):
         Tag.objects.create(id=3, name="center_tag", category_id=4, creator_id=self.user.id)
         Tag.objects.create(id=4, name="local_tag", category_id=5, creator_id=self.user.id)
 
-        c1 = Contact.objects.create(
-            name="name", unit="unit", phone="01234567", fax="01234567", email="test@mail.com", creator_id=1)
-
         p1 = Policy.objects.create(
-            id=1, title="title01", link="https://www.facebook.com/", contact=c1, creator_id=1)
+            id=1, title="title01", link="https://www.facebook.com/", creator_id=1)
         p2 = Policy.objects.create(
-            id=2, title="title02", link="https://www.facebook.com/", contact=c1, creator_id=1)
+            id=2, title="title02", link="https://www.facebook.com/", creator_id=1)
         p3 = Policy.objects.create(
-            id=3, title="title03", link="https://www.facebook.com/", contact=c1, creator_id=1)
+            id=3, title="title03", link="https://www.facebook.com/", creator_id=1)
 
         p1.tags.add(3)
 

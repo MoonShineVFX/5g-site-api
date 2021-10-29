@@ -87,6 +87,8 @@ class DemonstrationTest(TestCase):
             "address": "台北市南港區忠孝東路四段",
             #"locationUrl": "https://www.google.com.tw/maps/place/%E5%A4%A2%E6%83%B3%E5%8B%95%E7%95%AB/@25.0510988,121.5928083,17z/data=!3m2!4b1!5s0x3442ab6558ba3521:0xbe34660725096e72!4m5!3m4!1s0x3442aba32bd21781:0x592cb0b7781a69d3!8m2!3d25.051094!4d121.594997",
             #"description": "PAIR位於大義區C9倉庫，有8間10坪的駐村藝術家創作工作室。",
+            "websiteName": "駁二共創基地網",
+            "websiteUrl": "https://beboss.wda.gov.tw",
             "type": "5g",
             "contactUnit": "中華民國創業投資商業同業公會",
             "contactName": "曾炫誠",
@@ -115,6 +117,8 @@ class DemonstrationTest(TestCase):
             "address": "台北市南港區忠孝東路四段",
             #"locationUrl": "https://www.google.com.tw/maps/place/%E5%A4%A2%E6%83%B3%E5%8B%95%E7%95%AB/@25.0510988,121.5928083,17z/data=!3m2!4b1!5s0x3442ab6558ba3521:0xbe34660725096e72!4m5!3m4!1s0x3442aba32bd21781:0x592cb0b7781a69d3!8m2!3d25.051094!4d121.594997",
             #"description": "PAIR位於大義區C9倉庫，有8間10坪的駐村藝術家創作工作室。",
+            "websiteName": "駁二共創基地網",
+            "websiteUrl": "https://beboss.wda.gov.tw",
             "type": "5g",
             "contactUnit": "中華民國創業投資商業同業公會",
             "contactName": "曾炫誠",
@@ -166,29 +170,3 @@ class DemonstrationTest(TestCase):
         upload_file = DemoFile.objects.filter(id=response.data["id"], demonstration_id=1)[0]
         assert upload_file is not None
         assert upload_file.size != 0
-
-    @override_settings(DEBUG=True)
-    @debugger_queries
-    def test_delete_image(self):
-        url = '/api/demo_place_image_delete'
-        data = {
-            "id": 1
-        }
-        self.client.force_authenticate(user=self.user)
-        response = self.client.post(url, data=data, format='json')
-        print(response.data)
-        assert response.status_code == 204
-        assert not Image.objects.filter(id=1).exists()
-
-    @override_settings(DEBUG=True)
-    @debugger_queries
-    def test_delete_file(self):
-        url = '/api/demo_place_file_delete'
-        data = {
-            "id": 1
-        }
-        self.client.force_authenticate(user=self.user)
-        response = self.client.post(url, data=data, format='json')
-        print(response.data)
-        assert response.status_code == 204
-        assert not DemoFile.objects.filter(id=1).exists()

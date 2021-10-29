@@ -89,6 +89,8 @@ class WebDemonstrationListSerializer(serializers.ModelSerializer):
 class WebDemonstrationDetailSerializer(serializers.ModelSerializer):
     locationUrl = serializers.CharField(source="location_url")
     videoIframe = serializers.CharField(source="video_iframe")
+    websiteName = serializers.CharField(source="website_name")
+    websiteUrl = serializers.URLField(source="website_url")
     byMRT = serializers.CharField(source="by_mrt")
     byDrive = serializers.CharField(source="by_drive")
 
@@ -100,7 +102,7 @@ class WebDemonstrationDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Demonstration
         fields = ('id', 'title', 'locationUrl', 'address', 'description', 'type', 'videoIframe',
-                  'link', 'byMRT', 'byDrive', 'contact', 'images', 'files')
+                  'websiteName', 'websiteUrl', 'byMRT', 'byDrive', 'contact', 'images', 'files')
 
 
 class DemonstrationListSerializer(EditorBaseSerializer):
@@ -119,7 +121,7 @@ class DemonstrationDetailSerializer(WebDemonstrationDetailSerializer, EditorBase
     class Meta:
         model = Demonstration
         fields = ('id', 'title', 'locationUrl', 'address', 'description', 'type', 'videoIframe', 'imgUrl',
-                  'link', 'byMRT', 'byDrive', 'contact', 'images', 'files',
+                  'websiteName', 'websiteUrl', 'byMRT', 'byDrive', 'contact', 'images', 'files',
                   'createTime', 'updateTime', 'creator', 'updater')
 
     def get_imgUrl(self, instance):
@@ -129,6 +131,10 @@ class DemonstrationDetailSerializer(WebDemonstrationDetailSerializer, EditorBase
 class DemonstrationCreateUpdateSerializer(EditorBaseSerializer):
     locationUrl = serializers.CharField(source="location_url", required=False)
     videoIframe = serializers.CharField(source="video_iframe", required=False)
+
+    websiteName = serializers.CharField(source="website_name")
+    websiteUrl = serializers.URLField(source="website_url")
+
     contactUnit = serializers.CharField(source="contact_name")
     contactName = serializers.CharField(source="contact_unit")
     contactPhone = serializers.CharField(source="contact_phone")
@@ -139,6 +145,7 @@ class DemonstrationCreateUpdateSerializer(EditorBaseSerializer):
 
     class Meta:
         model = Demonstration
-        fields = ('id', 'title', 'locationUrl', 'address', 'description', 'type', 'videoIframe', 'link', 'thumb',
+        fields = ('id', 'title', 'locationUrl', 'address', 'description', 'type', 'videoIframe',
+                  'websiteName', 'websiteUrl', 'thumb',
                   'contactUnit', 'contactName', 'contactPhone', 'contactFax', 'contactEmail', 'byMRT', 'byDrive',
                   'createTime', 'updateTime', 'creator', 'updater')

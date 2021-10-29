@@ -35,5 +35,5 @@ class WebPolicyList(ListAPIView):
 
 
 class WebPolicyDetail(RetrieveAPIView):
-    queryset = Policy.objects.select_related("contact").prefetch_related('tags', 'tags__category').all()
+    queryset = Policy.objects.prefetch_related('tags', 'tags__category').all()
     serializer_class = serializers.WebPolicyDetailSerializer

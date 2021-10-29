@@ -12,13 +12,20 @@ class Policy(EditorBaseModel):
     amount_quota = models.CharField(max_length=50, default="", blank=True)
     link = models.URLField(null=True)
 
-    contact = models.ForeignKey('Contact', on_delete=models.CASCADE)
+    contact_name = models.CharField(max_length=200, null=True)
+    contact_unit = models.CharField(max_length=200, null=True)
+    contact_phone = models.CharField(max_length=50, null=True)
+    contact_fax = models.CharField(max_length=50, null=True)
+    contact_email = models.EmailField(null=True)
+
     tags = models.ManyToManyField(Tag)
 
-
-class Contact(EditorBaseModel):
-    name = models.CharField(max_length=200)
-    unit = models.CharField(max_length=200)
-    phone = models.CharField(max_length=50)
-    fax = models.CharField(max_length=50)
-    email = models.EmailField()
+    @property
+    def contact(self):
+        return {
+            "contact_name": self.contact_name,
+            "contact_unit": self.contact_unit,
+            "contact_phone": self.contact_phone,
+            "contact_fax": self.contact_fax,
+            "contact_email": self.contact_email
+        }
