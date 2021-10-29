@@ -16,5 +16,7 @@ urlpatterns = [
 
     url(r'^web_partners$', views.WebPartnerList.as_view(), name='web-partner-list'),
 
+    url(r'^web_about$', views.WebAboutDetail.as_view(), name='web-about'),
+
     url(r'^web_index$', views.WebIndexList.as_view(), name='web-index'),
 ]

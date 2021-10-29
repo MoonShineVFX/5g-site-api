@@ -12,6 +12,12 @@ class AboutSerializer(EditorBaseSerializer):
         fields = ('id', 'detail', 'createTime', 'updateTime', 'creator', 'updater')
 
 
+class WebAboutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = About
+        fields = ('detail',)
+
+
 class BannerListSerializer(EditorBaseSerializer):
     imgUrl = serializers.SerializerMethodField()
 

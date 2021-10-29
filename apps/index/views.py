@@ -21,6 +21,13 @@ class AboutDetail(RetrieveAPIView):
         return self.get(self, request, *args, **kwargs)
 
 
+class WebAboutDetail(RetrieveAPIView):
+    serializer_class = serializers.WebAboutSerializer
+
+    def get_object(self):
+        return About.objects.first()
+
+
 class AboutUpdate(PostUpdateView):
     serializer_class = serializers.AboutSerializer
 

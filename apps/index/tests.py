@@ -59,6 +59,14 @@ class IndexTest(TestCase):
 
     @override_settings(DEBUG=True)
     @debugger_queries
+    def test_get_web_about(self):
+        url = '/api/web_about'
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert response.data == {'detail': "<html>xxxxxxx</html>"}
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
     def test_update_about(self):
         url = '/api/about_update'
         data = {
