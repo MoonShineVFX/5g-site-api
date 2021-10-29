@@ -5,6 +5,11 @@ from ..tag.serializers import TagNameOnlySerializer
 from ..pagination import NewsPagination
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
+policy_category_dict = {
+    'center': 4,
+    'local': 5
+}
+
 
 class WebPolicyList(ListAPIView):
     serializer_class = serializers.WebPolicyListSerializer
@@ -37,3 +42,26 @@ class WebPolicyList(ListAPIView):
 class WebPolicyDetail(RetrieveAPIView):
     queryset = Policy.objects.prefetch_related('tags', 'tags__category').all()
     serializer_class = serializers.WebPolicyDetailSerializer
+
+
+class PolicyList(ListAPIView):
+    serializer_class = serializers.PolicyListSerializer
+    queryset = Policy.objects.select_related(
+        "creator", "updater").prefetch_related("tags", "tags__category").all().distinct().order_by('-id')
+    pagination_class = NewsPagination
+
+    def get_queryset(self):
+        queryset = self.queryset
+        category_key = self.request.query_params.get('cate', 'center')
+        tags = Tag.objects.filter(category__key=category_key).all()
+        return queryset.filter(tags__in=tags)
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        response.data = {"list": response.data}
+        return response
+
+
+class PolicyDetail(RetrieveAPIView):
+    queryset = Policy.objects.select_related("creator", "updater").prefetch_related("tags", "tags__category").all()
+    serializer_class = serializers.PolicyDetailSerializer

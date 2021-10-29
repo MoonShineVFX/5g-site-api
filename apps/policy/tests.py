@@ -43,3 +43,19 @@ class PolicyTest(TestCase):
         response = self.client.get(url)
         print(response.data)
         assert response.status_code == 200
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_get_policy_list(self):
+        url = '/api/policies?cate=local'
+        response = self.client.get(url)
+        print(response.data)
+        assert response.status_code == 200
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_get_policy_detail(self):
+        url = '/api/policies/1'
+        response = self.client.get(url)
+        print(response.data)
+        assert response.status_code == 200

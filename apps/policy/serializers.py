@@ -29,3 +29,29 @@ class WebPolicyDetailSerializer(EditTimeBaseSerializer, CategoryMixin):
         fields = ('id', 'title', 'description', 'tags', 'contact',
                   'categoryKey', 'categoryName', 'createTime', 'updateTime',
                   'applicationWay', 'applicationObject', 'amountQuota', 'link',)
+
+
+class PolicyListSerializer(EditorBaseSerializer, CategoryMixin):
+    titleSecondary = serializers.CharField(source="title_secondary")
+    tags = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = Policy
+        fields = ('id', 'title', 'titleSecondary', 'description', 'categoryKey', 'tags', 'contact',
+                  'createTime', 'updateTime', 'creator', 'updater')
+
+
+class PolicyDetailSerializer(EditorBaseSerializer, CategoryMixin):
+    applicationWay = serializers.CharField(source="application_way")
+    applicationObject = serializers.CharField(source="application_object")
+    amountQuota = serializers.CharField(source="amount_quota")
+
+    tags = TagNameOnlySerializer(many=True, read_only=True)
+    contact = ContactSerializer()
+
+    class Meta:
+        model = Policy
+        fields = ('id', 'title', 'description', 'tags', 'contact',
+                  'categoryKey', 'categoryName',
+                  'applicationWay', 'applicationObject', 'amountQuota', 'link',
+                  'createTime', 'updateTime', 'creator', 'updater')
