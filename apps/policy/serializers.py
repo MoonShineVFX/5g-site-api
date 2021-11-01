@@ -55,3 +55,27 @@ class PolicyDetailSerializer(EditorBaseSerializer, CategoryMixin):
                   'categoryKey', 'categoryName',
                   'applicationWay', 'applicationObject', 'amountQuota', 'link',
                   'createTime', 'updateTime', 'creator', 'updater')
+
+
+class PolicyCreateUpdateSerializer(EditorBaseSerializer):
+    titleSecondary = serializers.CharField(source="title_secondary")
+
+    contactUnit = serializers.CharField(source="contact_name")
+    contactName = serializers.CharField(source="contact_unit")
+    contactPhone = serializers.CharField(source="contact_phone")
+    contactFax = serializers.CharField(source="contact_fax")
+    contactEmail = serializers.CharField(source="contact_email")
+
+    applicationWay = serializers.CharField(source="application_way", required=False, allow_null=True, allow_blank=True)
+    applicationObject = serializers.CharField(source="application_object", required=False, allow_null=True, allow_blank=True)
+    amountQuota = serializers.CharField(source="amount_quota", required=False, allow_null=True, allow_blank=True)
+
+    contact = ContactSerializer(read_only=True)
+
+    class Meta:
+        model = Policy
+        fields = ('id', 'title', 'titleSecondary', 'description', 'tags', 'link',
+                  'contactUnit', 'contactName', 'contactPhone', 'contactFax', 'contactEmail',
+                  'applicationWay', 'applicationObject', 'amountQuota',
+                  'contact',
+                  'createTime', 'updateTime', 'creator', 'updater')

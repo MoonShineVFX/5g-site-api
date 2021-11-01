@@ -7,4 +7,6 @@ urlpatterns = [
 
     url(r'^policies$', views.PolicyList.as_view(), name='policy-list'),
     url(r'^policies/(?P<pk>\d+)$', views.PolicyDetail.as_view(), name='policy-detail'),
+    url(r'^policy_create$', views.PolicyCreate.as_view(), name='policy-create'),
+    url(r'^policy_update$', views.PolicyUpdate.as_view(), name='policy-update'),
 ]

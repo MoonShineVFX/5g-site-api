@@ -59,3 +59,46 @@ class PolicyTest(TestCase):
         response = self.client.get(url)
         print(response.data)
         assert response.status_code == 200
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_policy_create(self):
+        url = '/api/policy_create'
+        data = {
+            "title": "標題",
+            "titleSecondary": "次標題",
+            "description": "介紹",
+            "tags": [1],
+            "contactUnit": "中華民國創業投資商業同業公會",
+            "contactName": "曾炫誠",
+            "contactPhone": "(02)2546-5336",
+            "contactFax": "(02)2389-0636",
+            "contactEmail": "owen.tzeng@tvca.org.tw",
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format="json")
+        print(response.data)
+        assert response.status_code == 201
+        assert Policy.objects.filter(title=data["title"], creator_id=self.user.id).exists()
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_policy_update(self):
+        url = '/api/policy_update'
+        data = {
+            "id": 1,
+            "title": "標題",
+            "titleSecondary": "次標題",
+            "description": "介紹",
+            "tags": [1],
+            "contactUnit": "中華民國創業投資商業同業公會",
+            "contactName": "曾炫誠",
+            "contactPhone": "(02)2546-5336",
+            "contactFax": "(02)2389-0636",
+            "contactEmail": "owen.tzeng@tvca.org.tw",
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format="json")
+        print(response.data)
+        assert response.status_code == 200
+        assert Policy.objects.filter(id=1, title=data["title"], updater_id=self.user.id).exists()

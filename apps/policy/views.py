@@ -3,7 +3,9 @@ from ..tag.models import Tag
 from . import serializers
 from ..tag.serializers import TagNameOnlySerializer
 from ..pagination import NewsPagination
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView
+from ..shortcuts import PostCreateView, PostUpdateView
+
 
 policy_category_dict = {
     'center': 4,
@@ -64,3 +66,13 @@ class PolicyList(ListAPIView):
 class PolicyDetail(RetrieveAPIView):
     queryset = Policy.objects.select_related("creator", "updater").prefetch_related("tags", "tags__category").all()
     serializer_class = serializers.PolicyDetailSerializer
+
+
+class PolicyCreate(PostCreateView):
+    queryset = Policy.objects.select_related("creator", "updater").prefetch_related("tags").all()
+    serializer_class = serializers.PolicyCreateUpdateSerializer
+
+
+class PolicyUpdate(PostUpdateView):
+    queryset = Policy.objects.select_related("creator", "updater").prefetch_related("tags").all()
+    serializer_class = serializers.PolicyCreateUpdateSerializer
