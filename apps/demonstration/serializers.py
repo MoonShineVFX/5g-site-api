@@ -58,6 +58,7 @@ class ImageUploadSerializer(serializers.ModelSerializer):
 
 class FileUploadSerializer(serializers.ModelSerializer):
     file = serializers.FileField(write_only=True)
+    name = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
     demoPlaceId = serializers.IntegerField(source="demonstration_id")
 
@@ -69,7 +70,10 @@ class FileUploadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = File
-        fields = ('id', 'file', 'url', 'demoPlaceId')
+        fields = ('id', 'name', 'file', 'url', 'demoPlaceId')
+
+    def get_name(self, instance):
+        return instance.file.__str__().rsplit('/', 1)[1] if instance.file else None
 
     def get_url(self, instance):
         return "https://storage.googleapis.com/backend-django/{}".format(instance.file) if instance.file else None
