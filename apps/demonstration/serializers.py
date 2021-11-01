@@ -106,7 +106,7 @@ class WebDemonstrationDetailSerializer(serializers.ModelSerializer):
 
 
 class DemonstrationListSerializer(EditorBaseSerializer):
-    imgUrl = serializers.CharField(source="thumb")
+    imgUrl = serializers.SerializerMethodField()
     contact = ContactSerializer()
 
     class Meta:
