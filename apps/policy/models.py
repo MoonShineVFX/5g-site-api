@@ -10,7 +10,7 @@ class Policy(EditorBaseModel):
     application_way = models.TextField(null=True, default="", blank=True)
     application_object = models.TextField(null=True, default="", blank=True)
     amount_quota = models.CharField(max_length=50, default="", blank=True)
-    link = models.URLField(null=True)
+    link = models.URLField(null=True, blank=True)
 
     contact_name = models.CharField(max_length=200, null=True)
     contact_unit = models.CharField(max_length=200, null=True)
@@ -18,7 +18,7 @@ class Policy(EditorBaseModel):
     contact_fax = models.CharField(max_length=50, null=True)
     contact_email = models.EmailField(null=True)
 
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
 
     @property
     def contact(self):
