@@ -14,10 +14,13 @@ class CommonView(APIView):
 
     def post(self, request, *args, **kwargs):
         news_tags = Tag.objects.select_related("creator", "updater", "category").filter(category_id__in=[1, 2])
+        policy_tags = Tag.objects.select_related("creator", "updater", "category").filter(category_id__in=[4, 5])
+
         data = {
             "userId": self.request.user.id,
             "userName": self.request.user.name,
             "newsTags": serializers.TagWithCategorySerializer(news_tags, many=True).data,
+            "policyTags": serializers.TagWithCategorySerializer(policy_tags, many=True).data,
         }
         return Response(data, status=status.HTTP_200_OK)
 
