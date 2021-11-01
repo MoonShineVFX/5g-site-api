@@ -57,7 +57,7 @@ class ImageUploadSerializer(serializers.ModelSerializer):
 
 
 class FileUploadSerializer(serializers.ModelSerializer):
-    file = serializers.ImageField(write_only=True)
+    file = serializers.FileField(write_only=True)
     url = serializers.SerializerMethodField()
     demoPlaceId = serializers.IntegerField(source="demonstration_id")
 
