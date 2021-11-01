@@ -48,7 +48,6 @@ class PolicyList(ListAPIView):
     serializer_class = serializers.PolicyListSerializer
     queryset = Policy.objects.select_related(
         "creator", "updater").prefetch_related("tags", "tags__category").all().distinct().order_by('-id')
-    pagination_class = NewsPagination
 
     def get_queryset(self):
         queryset = self.queryset

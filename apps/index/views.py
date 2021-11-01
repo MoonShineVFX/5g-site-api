@@ -1,6 +1,7 @@
 from .models import About, Banner, Partner, Setting
 from ..article.models import News
 from ..tag.models import Tag
+from ..demonstration.models import Demonstration
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework import status
@@ -9,6 +10,7 @@ from ..shortcuts import PostCreateView, PostUpdateView, WebUpdateView
 from ..pagination import PartnerPagination
 from . import serializers
 from ..tag.serializers import TagNameOnlySerializer
+from ..demonstration.serializers import WebDemonstrationListSerializer
 
 
 class AboutDetail(RetrieveAPIView):
@@ -129,10 +131,11 @@ class WebIndexList(APIView):
         news = News.objects.filter(tags__category_id=1).order_by("-hot_at", "-created_at").distinct()[:3]
         news_industries = News.objects.filter(tags__category_id=2).order_by("-hot_at", "-created_at").distinct()[:3]
         partner_tags = Tag.objects.filter(category_id=3)
+        demo_places = Demonstration.objects.order_by("-created_at").all()[:3]
 
         data = {
             "banners": serializers.WebIndexBannerSerializer(banners, many=True).data,
-            "demoPlaces": [],
+            "demoPlaces": WebDemonstrationListSerializer(demo_places, many=True).data,
             "news": {
                 "news": serializers.WebIndexNewsSerializer(news, many=True).data,
                 "newsIndustries": serializers.WebIndexNewsSerializer(news_industries, many=True).data,

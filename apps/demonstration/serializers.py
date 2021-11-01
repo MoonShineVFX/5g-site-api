@@ -114,6 +114,9 @@ class DemonstrationListSerializer(EditorBaseSerializer):
         fields = ('id', 'title', 'imgUrl', 'address', 'type', 'contact',
                   'createTime', 'updateTime', 'creator', 'updater')
 
+    def get_imgUrl(self, instance):
+        return "https://storage.googleapis.com/backend-django/{}".format(instance.thumb) if instance.thumb else None
+
 
 class DemonstrationDetailSerializer(WebDemonstrationDetailSerializer, EditorBaseSerializer):
     imgUrl = serializers.SerializerMethodField()
@@ -133,7 +136,7 @@ class DemonstrationCreateUpdateSerializer(EditorBaseSerializer):
     videoIframe = serializers.CharField(source="video_iframe", required=False)
 
     websiteName = serializers.CharField(source="website_name")
-    websiteUrl = serializers.URLField(source="website_url")
+    websiteUrl = serializers.URLField(source="website_url", allow_null=True, allow_blank=True)
 
     contactUnit = serializers.CharField(source="contact_name")
     contactName = serializers.CharField(source="contact_unit")
