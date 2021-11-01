@@ -34,10 +34,11 @@ class WebPolicyDetailSerializer(EditTimeBaseSerializer, CategoryMixin):
 class PolicyListSerializer(EditorBaseSerializer, CategoryMixin):
     titleSecondary = serializers.CharField(source="title_secondary")
     tags = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    contact = ContactSerializer()
 
     class Meta:
         model = Policy
-        fields = ('id', 'title', 'titleSecondary', 'description', 'categoryKey', 'tags', 'contact',
+        fields = ('id', 'title', 'titleSecondary', 'description', 'categoryKey', 'tags', 'contact', 'link',
                   'createTime', 'updateTime', 'creator', 'updater')
 
 
@@ -60,11 +61,11 @@ class PolicyDetailSerializer(EditorBaseSerializer, CategoryMixin):
 class PolicyCreateUpdateSerializer(EditorBaseSerializer):
     titleSecondary = serializers.CharField(source="title_secondary")
 
-    contactUnit = serializers.CharField(source="contact_name")
-    contactName = serializers.CharField(source="contact_unit")
-    contactPhone = serializers.CharField(source="contact_phone")
-    contactFax = serializers.CharField(source="contact_fax")
-    contactEmail = serializers.CharField(source="contact_email")
+    contactUnit = serializers.CharField(source="contact_name", write_only=True)
+    contactName = serializers.CharField(source="contact_unit", write_only=True)
+    contactPhone = serializers.CharField(source="contact_phone", write_only=True)
+    contactFax = serializers.CharField(source="contact_fax", write_only=True)
+    contactEmail = serializers.CharField(source="contact_email", write_only=True)
 
     applicationWay = serializers.CharField(source="application_way", required=False, allow_null=True, allow_blank=True)
     applicationObject = serializers.CharField(source="application_object", required=False, allow_null=True, allow_blank=True)
