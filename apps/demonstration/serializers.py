@@ -136,19 +136,19 @@ class DemonstrationDetailSerializer(WebDemonstrationDetailSerializer, EditorBase
 
 
 class DemonstrationCreateUpdateSerializer(EditorBaseSerializer):
-    locationUrl = serializers.CharField(source="location_url", required=False)
-    videoIframe = serializers.CharField(source="video_iframe", required=False)
+    locationUrl = serializers.CharField(source="location_url", required=False, allow_null=True, allow_blank=True)
+    videoIframe = serializers.CharField(source="video_iframe", required=False, allow_null=True, allow_blank=True)
 
     websiteName = serializers.CharField(source="website_name")
-    websiteUrl = serializers.URLField(source="website_url", allow_null=True, allow_blank=True)
+    websiteUrl = serializers.URLField(source="website_url", required=False, allow_null=True, allow_blank=True)
 
     contactUnit = serializers.CharField(source="contact_name")
     contactName = serializers.CharField(source="contact_unit")
     contactPhone = serializers.CharField(source="contact_phone")
     contactFax = serializers.CharField(source="contact_fax")
     contactEmail = serializers.CharField(source="contact_email")
-    byMRT = serializers.CharField(source="by_mrt", allow_null=True)
-    byDrive = serializers.CharField(source="by_drive", allow_null=True)
+    byMRT = serializers.CharField(source="by_mrt", required=False, allow_null=True, allow_blank=True)
+    byDrive = serializers.CharField(source="by_drive", required=False, allow_null=True, allow_blank=True)
 
     class Meta:
         model = Demonstration
