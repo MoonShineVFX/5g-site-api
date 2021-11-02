@@ -13,6 +13,7 @@ import sys
 import os
 import environ
 import pymysql
+from datetime import timedelta
 pymysql.install_as_MySQLdb()
 
 env = environ.Env(
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework_simplejwt',
     'apps.user',
     'apps.tag',
     'apps.index',
@@ -96,6 +98,10 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'apps.renderers.ApiRenderer',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 
@@ -217,3 +223,11 @@ if 'test' in sys.argv:
 
 # django-cors-headers
 CORS_ORIGIN_ALLOW_ALL = True
+
+# JWT Token
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+}
