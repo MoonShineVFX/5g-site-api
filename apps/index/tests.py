@@ -52,6 +52,7 @@ class IndexTest(TestCase):
     @debugger_queries
     def test_get_about(self):
         url = '/api/about'
+        self.client.force_authenticate(user=self.user)
         response = self.client.post(url)
         print(response.data)
         assert response.status_code == 200
@@ -94,6 +95,7 @@ class IndexTest(TestCase):
         Banner.objects.bulk_create(add_list)
         # order: 1 3 4 2
         url = '/api/banners'
+        self.client.force_authenticate(user=self.user)
         response = self.client.post(url)
         print(response.data)
         assert response.status_code == 200
@@ -171,6 +173,7 @@ class IndexTest(TestCase):
     @debugger_queries
     def test_list_partner(self):
         url = '/api/partners'
+        self.client.force_authenticate(user=self.user)
         response = self.client.post(url)
         print(response.data)
         assert response.status_code == 200

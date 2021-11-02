@@ -30,6 +30,7 @@ class TagTest(TestCase):
     @debugger_queries
     def test_get_tags_and_categories(self):
         url = '/api/tags_and_categories'
+        self.client.force_authenticate(user=self.user)
         response = self.client.post(url)
         print(response.data)
         assert response.status_code == 200

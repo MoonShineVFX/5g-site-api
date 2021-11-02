@@ -66,6 +66,7 @@ class DemonstrationTest(TestCase):
     @debugger_queries
     def test_get_demo_places_list(self):
         url = '/api/demo_places'
+        self.client.force_authenticate(user=self.user)
         response = self.client.get(url)
         print(response.data)
         assert response.status_code == 200
@@ -74,6 +75,7 @@ class DemonstrationTest(TestCase):
     @debugger_queries
     def test_get_demo_places_detail(self):
         url = '/api/demo_places/1'
+        self.client.force_authenticate(user=self.user)
         response = self.client.get(url)
         print(response.data)
         assert response.status_code == 200

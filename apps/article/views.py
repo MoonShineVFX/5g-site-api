@@ -1,15 +1,17 @@
 from .models import News, Image
-from ..tag.models import Tag, Category
+from ..tag.models import Tag
 from . import serializers
 from ..tag.serializers import TagNameOnlySerializer
 from ..pagination import NewsPagination
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from ..shortcuts import WebCreateView, WebUpdateView, PostCreateView
 
 
 class NewsList(ListAPIView):
+    permission_classes = (IsAuthenticated, )
     serializer_class = serializers.NewsListSerializer
     queryset = News.objects.select_related("creator", "updater").prefetch_related('tags', 'tags__category').all()
 
@@ -29,6 +31,7 @@ class NewsList(ListAPIView):
 
 
 class NewsDetail(RetrieveAPIView):
+    permission_classes = (IsAuthenticated, )
     queryset = News.objects.select_related("creator", "updater").all()
     serializer_class = serializers.NewsDetailSerializer
 

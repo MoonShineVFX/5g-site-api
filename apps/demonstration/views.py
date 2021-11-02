@@ -4,9 +4,11 @@ from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from ..shortcuts import WebCreateView, WebUpdateView, PostCreateView, PostDestroyView
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 
 
 class DemonstrationList(ListAPIView):
+    permission_classes = (IsAuthenticated, )
     serializer_class = serializers.DemonstrationListSerializer
     queryset = Demonstration.objects.select_related("creator", "updater").all()
 
@@ -26,6 +28,7 @@ class DemonstrationList(ListAPIView):
 
 
 class DemonstrationDetail(RetrieveAPIView):
+    permission_classes = (IsAuthenticated, )
     queryset = Demonstration.objects.select_related(
         "creator", "updater").prefetch_related('images', 'files').all()
     serializer_class = serializers.DemonstrationDetailSerializer

@@ -48,6 +48,7 @@ class PolicyTest(TestCase):
     @debugger_queries
     def test_get_policy_list(self):
         url = '/api/policies?cate=local'
+        self.client.force_authenticate(user=self.user)
         response = self.client.get(url)
         print(response.data)
         assert response.status_code == 200
@@ -56,6 +57,7 @@ class PolicyTest(TestCase):
     @debugger_queries
     def test_get_policy_detail(self):
         url = '/api/policies/1'
+        self.client.force_authenticate(user=self.user)
         response = self.client.get(url)
         print(response.data)
         assert response.status_code == 200

@@ -11,9 +11,11 @@ from ..pagination import PartnerPagination
 from . import serializers
 from ..tag.serializers import TagNameOnlySerializer
 from ..demonstration.serializers import WebDemonstrationListSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 class AboutDetail(RetrieveAPIView):
+    permission_classes = (IsAuthenticated, )
     serializer_class = serializers.AboutSerializer
 
     def get_object(self):
@@ -38,6 +40,8 @@ class AboutUpdate(PostUpdateView):
 
 
 class BannerList(APIView):
+    permission_classes = (IsAuthenticated, )
+
     def get(self, request, *args, **kwargs):
         return self.post(self, request, *args, **kwargs)
 
@@ -69,6 +73,8 @@ class BannerUpdate(PostUpdateView):
 
 
 class PartnerList(APIView):
+    permission_classes = (IsAuthenticated, )
+
     def get(self, request, *args, **kwargs):
         return self.post(self, request, *args, **kwargs)
 

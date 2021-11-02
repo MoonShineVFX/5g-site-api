@@ -5,6 +5,7 @@ from ..tag.serializers import TagNameOnlySerializer
 from ..pagination import NewsPagination
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView
 from ..shortcuts import PostCreateView, PostUpdateView
+from rest_framework.permissions import IsAuthenticated
 
 
 policy_category_dict = {
@@ -47,6 +48,7 @@ class WebPolicyDetail(RetrieveAPIView):
 
 
 class PolicyList(ListAPIView):
+    permission_classes = (IsAuthenticated, )
     serializer_class = serializers.PolicyListSerializer
     queryset = Policy.objects.select_related(
         "creator", "updater").prefetch_related("tags", "tags__category").all().distinct().order_by('-id')
@@ -58,6 +60,7 @@ class PolicyList(ListAPIView):
 
 
 class PolicyDetail(RetrieveAPIView):
+    permission_classes = (IsAuthenticated, )
     queryset = Policy.objects.select_related("creator", "updater").prefetch_related("tags", "tags__category").all()
     serializer_class = serializers.PolicyDetailSerializer
 

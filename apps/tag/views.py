@@ -1,11 +1,9 @@
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView
 from rest_framework import status
 from rest_framework.response import Response
 from .models import Tag, Category
 from . import serializers
 from ..shortcuts import PostUpdateView
-from ..renderers import ApiRenderer
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -26,6 +24,7 @@ class CommonView(APIView):
 
 
 class TagAndCategoryList(APIView):
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         return self.post(self, request, *args, **kwargs)

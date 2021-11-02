@@ -28,6 +28,7 @@ class ArticleTest(TestCase):
     @debugger_queries
     def test_get_news_list(self):
         url = '/api/news'
+        self.client.force_authenticate(user=self.user)
         response = self.client.post(url)
         print(response)
         assert response.status_code == 200
@@ -37,6 +38,7 @@ class ArticleTest(TestCase):
     @debugger_queries
     def test_news_detail(self):
         url = '/api/news/1'
+        self.client.force_authenticate(user=self.user)
         response = self.client.get(url)
         print(response.data)
         assert response.status_code == 200
