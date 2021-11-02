@@ -51,12 +51,6 @@ class PolicyList(ListAPIView):
     queryset = Policy.objects.select_related(
         "creator", "updater").prefetch_related("tags", "tags__category").all().distinct().order_by('-id')
 
-    def get_queryset(self):
-        queryset = self.queryset
-        category_key = self.request.query_params.get('cate', 'center')
-        tags = Tag.objects.filter(category__key=category_key).all()
-        return queryset.filter(tags__in=tags)
-
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         response.data = {"list": response.data}
