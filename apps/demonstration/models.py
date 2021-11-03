@@ -47,7 +47,7 @@ class Image(EditorBaseModel):
 class File(EditorBaseModel):
     file = models.FileField(upload_to='demonstrations/files', null=True)
     size = models.IntegerField(null=True)
-    type = models.CharField(max_length=50)
+    type = models.CharField(max_length=255)
 
     demonstration = models.ForeignKey(Demonstration, related_name="files", on_delete=models.CASCADE)
 

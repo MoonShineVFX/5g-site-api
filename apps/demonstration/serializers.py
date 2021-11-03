@@ -139,7 +139,7 @@ class DemonstrationCreateUpdateSerializer(EditorBaseSerializer):
     locationUrl = serializers.CharField(source="location_url", required=False, allow_null=True, allow_blank=True)
     videoIframe = serializers.CharField(source="video_iframe", required=False, allow_null=True, allow_blank=True)
 
-    websiteName = serializers.CharField(source="website_name")
+    websiteName = serializers.CharField(source="website_name", required=False, allow_null=True, allow_blank=True)
     websiteUrl = serializers.URLField(source="website_url", required=False, allow_null=True, allow_blank=True)
 
     contactUnit = serializers.CharField(source="contact_name")
