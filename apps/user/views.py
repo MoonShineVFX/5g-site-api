@@ -22,5 +22,6 @@ class ObtainTokenView(APIView):
         user = request.user
         refresh = RefreshToken.for_user(user)
         token = str(refresh.access_token)
-
-        return Response({"token": token}, status=status.HTTP_200_OK)
+        response = Response({"token": token}, status=status.HTTP_200_OK)
+        response.set_cookie(key="token", value=token)
+        return response
