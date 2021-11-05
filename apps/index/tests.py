@@ -186,6 +186,7 @@ class IndexTest(TestCase):
             "file": get_test_image_file(),
             "link": "http://google.com.tw",
             "name": "夥伴名稱",
+            'nameEnglish': "english name",
             "phone": "夥伴電話",
             "email": "test@email.com",
             "description": "夥伴介紹",
@@ -197,7 +198,7 @@ class IndexTest(TestCase):
         assert response.status_code == 201
         data.pop('tags')
         data.pop('file')
-        p = Partner.objects.filter(**data).first()
+        p = Partner.objects.filter(name="夥伴名稱", name_english="english name").first()
         assert p is not None
         tag_id_list = [tag.id for tag in p.tags.all()]
         assert tag_id_list == [1, 2]

@@ -74,10 +74,11 @@ class BannerCreateUpdateSerializer(EditorBaseSerializer):
 class PartnerSerializer(EditorBaseSerializer):
     imgUrl = serializers.SerializerMethodField()
     tags = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    nameEnglish = serializers.CharField(source="name_english")
 
     class Meta:
         model = Partner
-        fields = ('id',  'imgUrl', 'link', 'name', 'phone', 'email', 'description', 'tags',
+        fields = ('id',  'imgUrl', 'link', 'name', 'nameEnglish', 'phone', 'email', 'description', 'tags',
                   'createTime', 'updateTime', 'creator', 'updater')
         read_only = ('id', 'imgUrl',)
 
@@ -88,10 +89,11 @@ class PartnerSerializer(EditorBaseSerializer):
 class PartnerCreateUpdateSerializer(EditorBaseSerializer):
     file = serializers.ImageField(write_only=True, required=False)
     imgUrl = serializers.SerializerMethodField()
+    nameEnglish = serializers.CharField(source="name_english")
 
     class Meta:
         model = Partner
-        fields = ('id', 'imgUrl', 'file', 'link', 'name', 'phone', 'email', 'description', 'tags',
+        fields = ('id', 'imgUrl', 'file', 'link', 'name', 'nameEnglish', 'phone', 'email', 'description', 'tags',
                   'createTime', 'updateTime', 'creator', 'updater')
         read_only = ('id', 'imgUrl',)
 
@@ -115,10 +117,11 @@ class PartnerCreateUpdateSerializer(EditorBaseSerializer):
 
 class WebPartnerSerializer(serializers.ModelSerializer):
     imgUrl = serializers.SerializerMethodField()
+    nameEnglish = serializers.CharField(source="name_english")
 
     class Meta:
         model = Partner
-        fields = ('id', 'imgUrl', 'link', 'name', 'phone', 'email', 'description')
+        fields = ('id', 'imgUrl', 'link', 'name', 'nameEnglish', 'phone', 'email', 'description')
         read_only = ('id', 'imgUrl',)
 
     def get_imgUrl(self, instance):
