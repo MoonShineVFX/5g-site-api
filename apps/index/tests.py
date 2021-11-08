@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from django.test.utils import override_settings
 from ..shortcuts import debugger_queries
-from .models import About, Banner, Partner, Setting
+from .models import About, Privacy, Security, Banner, Partner, Setting
 from ..user.models import User
 from rest_framework.exceptions import ErrorDetail
 
@@ -34,6 +34,8 @@ class IndexTest(TestCase):
         self.user = User.objects.create(id=1, name="user01", email="user01@mail.com")
         setup_categories_tags()
         About.objects.create(id=1, detail="<html>xxxxxxx</html>", creator_id=1)
+        Privacy.objects.create(id=1, title="Privacy", detail="<html>xxxxxxx</html>", creator_id=1)
+        Security.objects.create(id=1, title="Security", detail="<html>xxxxxxx</html>", creator_id=1)
         Setting.objects.create(id=1, banner_length=5, creator_id=1)
         self.b1 = Banner.objects.create(
             id=1, title="title01", image=get_upload_file(file_type='.jpg'), link="company01.com", priority=1, size=0,
@@ -77,6 +79,48 @@ class IndexTest(TestCase):
         response = self.client.post(url, data=data, format='json')
         assert response.status_code == 200
         assert response.data['detail'] == "<html>new</html>"
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_get_web_privacy(self):
+        url = '/api/web_privacy'
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert response.data == {'title': "Privacy", 'detail': "<html>xxxxxxx</html>"}
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_update_privacy(self):
+        url = '/api/privacy_update'
+        data = {
+            "detail": "<html>new</html>",
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='json')
+        assert response.status_code == 200
+        assert response.data['detail'] == "<html>new</html>"
+        assert response.data['title'] == "Privacy"
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_get_web_security(self):
+        url = '/api/web_security'
+        response = self.client.get(url)
+        assert response.status_code == 200
+        assert response.data == {'title': "Security", 'detail': "<html>xxxxxxx</html>"}
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_update_security(self):
+        url = '/api/security_update'
+        data = {
+            "detail": "<html>new</html>",
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='json')
+        assert response.status_code == 200
+        assert response.data['detail'] == "<html>new</html>"
+        assert response.data['title'] == "Security"
 
     @override_settings(DEBUG=True)
     @debugger_queries

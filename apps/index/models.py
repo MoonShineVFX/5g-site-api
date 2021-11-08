@@ -19,6 +19,20 @@ class About(EditorBaseModel):
     objects = models.Manager()
 
 
+class Privacy(EditorBaseModel):
+    title = models.CharField(max_length=100, null=True)
+    detail = models.TextField(default="")
+
+    objects = models.Manager()
+
+
+class Security(EditorBaseModel):
+    title = models.CharField(max_length=100, null=True)
+    detail = models.TextField(default="")
+
+    objects = models.Manager()
+
+
 class Banner(EditorBaseModel):
     title = models.CharField(max_length=100, null=True)
     link = models.URLField()

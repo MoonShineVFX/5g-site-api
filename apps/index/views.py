@@ -1,4 +1,4 @@
-from .models import About, Banner, Partner, Setting
+from .models import About, Privacy, Security, Banner, Partner, Setting
 from ..article.models import News
 from ..tag.models import Tag
 from ..demonstration.models import Demonstration
@@ -37,6 +37,56 @@ class AboutUpdate(PostUpdateView):
 
     def get_object(self):
         return About.objects.select_related("creator", "updater").first()
+
+
+class PrivacyDetail(RetrieveAPIView):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = serializers.PrivacySerializer
+
+    def get_object(self):
+        return Privacy.objects.select_related("creator", "updater").first()
+
+    def post(self, request, *args, **kwargs):
+        return self.get(self, request, *args, **kwargs)
+
+
+class WebPrivacyDetail(RetrieveAPIView):
+    serializer_class = serializers.WebPrivacySerializer
+
+    def get_object(self):
+        return Privacy.objects.first()
+
+
+class PrivacyUpdate(PostUpdateView):
+    serializer_class = serializers.PrivacySerializer
+
+    def get_object(self):
+        return Privacy.objects.select_related("creator", "updater").first()
+
+
+class SecurityDetail(RetrieveAPIView):
+    permission_classes = (IsAuthenticated, )
+    serializer_class = serializers.SecuritySerializer
+
+    def get_object(self):
+        return Security.objects.select_related("creator", "updater").first()
+
+    def post(self, request, *args, **kwargs):
+        return self.get(self, request, *args, **kwargs)
+
+
+class WebSecurityDetail(RetrieveAPIView):
+    serializer_class = serializers.WebSecuritySerializer
+
+    def get_object(self):
+        return Security.objects.first()
+
+
+class SecurityUpdate(PostUpdateView):
+    serializer_class = serializers.SecuritySerializer
+
+    def get_object(self):
+        return Security.objects.select_related("creator", "updater").first()
 
 
 class BannerList(APIView):

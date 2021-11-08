@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 from rest_framework import serializers
-from .models import Setting, About, Banner, Partner
+from .models import Setting, About, Privacy, Security, Banner, Partner
 from ..article.models import News
 from ..serializers import EditorBaseSerializer
 
@@ -16,6 +16,30 @@ class WebAboutSerializer(serializers.ModelSerializer):
     class Meta:
         model = About
         fields = ('detail',)
+
+
+class PrivacySerializer(EditorBaseSerializer):
+    class Meta:
+        model = Privacy
+        fields = ('id', 'title', 'detail', 'createTime', 'updateTime', 'creator', 'updater')
+
+
+class WebPrivacySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Privacy
+        fields = ('title', 'detail',)
+
+
+class SecuritySerializer(EditorBaseSerializer):
+    class Meta:
+        model = Security
+        fields = ('id', 'title', 'detail', 'createTime', 'updateTime', 'creator', 'updater')
+
+
+class WebSecuritySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Security
+        fields = ('title', 'detail',)
 
 
 class BannerListSerializer(EditorBaseSerializer):
