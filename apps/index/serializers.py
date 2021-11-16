@@ -113,7 +113,7 @@ class PartnerSerializer(EditorBaseSerializer):
 class PartnerCreateUpdateSerializer(EditorBaseSerializer):
     file = serializers.ImageField(write_only=True, required=False)
     imgUrl = serializers.SerializerMethodField()
-    nameEnglish = serializers.CharField(source="name_english")
+    nameEnglish = serializers.CharField(source="name_english", allow_blank=True, allow_null=True, required=False)
 
     class Meta:
         model = Partner

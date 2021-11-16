@@ -33,12 +33,17 @@ class WebPolicyDetailSerializer(EditTimeBaseSerializer, CategoryMixin):
 
 class PolicyListSerializer(EditorBaseSerializer, CategoryMixin):
     titleSecondary = serializers.CharField(source="title_secondary")
+    applicationWay = serializers.CharField(source="application_way")
+    applicationObject = serializers.CharField(source="application_object")
+    amountQuota = serializers.CharField(source="amount_quota")
+
     tags = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     contact = ContactSerializer()
 
     class Meta:
         model = Policy
-        fields = ('id', 'title', 'titleSecondary', 'description', 'categoryKey', 'tags', 'contact', 'link',
+        fields = ('id', 'title', 'titleSecondary', 'applicationWay', 'applicationObject', 'amountQuota',
+                  'description', 'categoryKey', 'tags', 'contact', 'link',
                   'createTime', 'updateTime', 'creator', 'updater')
 
 
