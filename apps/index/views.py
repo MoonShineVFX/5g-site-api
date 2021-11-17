@@ -187,7 +187,7 @@ class WebIndexList(APIView):
         news = News.objects.filter(tags__category_id=1).order_by("-hot_at", "-created_at").distinct()[:3]
         news_industries = News.objects.filter(tags__category_id=2).order_by("-hot_at", "-created_at").distinct()[:3]
         partner_tags = Tag.objects.filter(category_id=3)
-        demo_places = Demonstration.objects.order_by("-updated_at", "-created_at").all()[:3]
+        demo_places = Demonstration.objects.filter(type="5g").order_by("-updated_at", "-created_at").all()[:3]
 
         data = {
             "banners": serializers.WebIndexBannerSerializer(banners, many=True).data,

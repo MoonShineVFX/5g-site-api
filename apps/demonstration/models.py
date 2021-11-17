@@ -11,7 +11,7 @@ class Demonstration(EditorBaseModel):
     location_url = models.TextField(null=True)
     address = models.CharField(max_length=200, default="", blank=True)
     video_iframe = models.TextField(null=True, default="", blank=True)
-    description = models.CharField(max_length=200, default="", blank=True)
+    description = models.TextField(max_length=200, default="", blank=True)
     type = models.CharField(max_length=10, default="5g")
     thumb = models.ImageField(upload_to='demonstrations/images', null=True)
     website_url = models.URLField(null=True)
