@@ -111,6 +111,29 @@ class DemonstrationTest(TestCase):
 
     @override_settings(DEBUG=True)
     @debugger_queries
+    def test_demo_places_create_without_contact(self):
+        url = '/api/demo_place_create'
+        data = {
+            "title": "駁二大義區C7動漫倉庫",
+            "address": "台北市南港區忠孝東路四段",
+            "type": "5g",
+            "contactUnit": "中華民國創業投資商業同業公會",
+            "contactName": "曾炫誠",
+            #"contactPhone": "(02)2546-5336",
+            #"contactFax": "(02)2389-0636",
+            #"contactEmail": "owen.tzeng@tvca.org.tw",
+            "thumb": get_test_image_file(),
+            "byDrive": ""
+
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='multipart')
+        print(response.data)
+        assert response.status_code == 201
+        assert Demonstration.objects.filter(title=data["title"], creator_id=self.user.id).exists()
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
     def test_demo_places_update(self):
         url = '/api/demo_place_update'
         data = {

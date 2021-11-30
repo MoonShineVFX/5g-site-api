@@ -144,9 +144,9 @@ class DemonstrationCreateUpdateSerializer(EditorBaseSerializer):
 
     contactUnit = serializers.CharField(source="contact_name")
     contactName = serializers.CharField(source="contact_unit")
-    contactPhone = serializers.CharField(source="contact_phone")
-    contactFax = serializers.CharField(source="contact_fax")
-    contactEmail = serializers.CharField(source="contact_email")
+    contactPhone = serializers.CharField(source="contact_phone", required=False)
+    contactFax = serializers.CharField(source="contact_fax", required=False)
+    contactEmail = serializers.CharField(source="contact_email", required=False)
     byMRT = serializers.CharField(source="by_mrt", required=False, allow_null=True, allow_blank=True)
     byDrive = serializers.CharField(source="by_drive", required=False, allow_null=True, allow_blank=True)
 

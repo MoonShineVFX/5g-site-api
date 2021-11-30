@@ -9,7 +9,7 @@ class Policy(EditorBaseModel):
     description = models.CharField(max_length=200, default="", blank=True)
     application_way = models.TextField(null=True, default="", blank=True)
     application_object = models.TextField(null=True, default="", blank=True)
-    amount_quota = models.CharField(max_length=50, default="", blank=True)
+    amount_quota = models.TextField(null=True, default="", blank=True)
     link = models.URLField(null=True, blank=True)
 
     contact_name = models.CharField(max_length=200, null=True)

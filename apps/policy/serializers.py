@@ -68,9 +68,9 @@ class PolicyCreateUpdateSerializer(EditorBaseSerializer):
 
     contactUnit = serializers.CharField(source="contact_name", write_only=True)
     contactName = serializers.CharField(source="contact_unit", write_only=True)
-    contactPhone = serializers.CharField(source="contact_phone", write_only=True)
-    contactFax = serializers.CharField(source="contact_fax", write_only=True)
-    contactEmail = serializers.CharField(source="contact_email", write_only=True)
+    contactPhone = serializers.CharField(source="contact_phone", write_only=True, required=False)
+    contactFax = serializers.CharField(source="contact_fax", write_only=True, required=False)
+    contactEmail = serializers.CharField(source="contact_email", write_only=True, required=False)
 
     applicationWay = serializers.CharField(source="application_way", required=False, allow_null=True, allow_blank=True)
     applicationObject = serializers.CharField(source="application_object", required=False, allow_null=True, allow_blank=True)
