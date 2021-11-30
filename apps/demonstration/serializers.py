@@ -142,11 +142,11 @@ class DemonstrationCreateUpdateSerializer(EditorBaseSerializer):
     websiteName = serializers.CharField(source="website_name", required=False, allow_null=True, allow_blank=True)
     websiteUrl = serializers.URLField(source="website_url", required=False, allow_null=True, allow_blank=True)
 
-    contactUnit = serializers.CharField(source="contact_name")
-    contactName = serializers.CharField(source="contact_unit")
-    contactPhone = serializers.CharField(source="contact_phone", required=False)
-    contactFax = serializers.CharField(source="contact_fax", required=False)
-    contactEmail = serializers.CharField(source="contact_email", required=False)
+    contactUnit = serializers.CharField(source="contact_name", required=False, allow_null=True, allow_blank=True)
+    contactName = serializers.CharField(source="contact_unit", required=False, allow_null=True, allow_blank=True)
+    contactPhone = serializers.CharField(source="contact_phone", required=False, allow_null=True, allow_blank=True)
+    contactFax = serializers.CharField(source="contact_fax", required=False, allow_null=True, allow_blank=True)
+    contactEmail = serializers.CharField(source="contact_email", required=False, allow_null=True, allow_blank=True)
     byMRT = serializers.CharField(source="by_mrt", required=False, allow_null=True, allow_blank=True)
     byDrive = serializers.CharField(source="by_drive", required=False, allow_null=True, allow_blank=True)
 

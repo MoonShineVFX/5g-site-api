@@ -119,7 +119,7 @@ class DemonstrationTest(TestCase):
             "type": "5g",
             "contactUnit": "中華民國創業投資商業同業公會",
             "contactName": "曾炫誠",
-            #"contactPhone": "(02)2546-5336",
+            "contactPhone": "",
             #"contactFax": "(02)2389-0636",
             #"contactEmail": "owen.tzeng@tvca.org.tw",
             "thumb": get_test_image_file(),

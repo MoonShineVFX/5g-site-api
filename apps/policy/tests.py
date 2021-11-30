@@ -90,11 +90,11 @@ class PolicyTest(TestCase):
         data = {
             "title": "標題",
             "titleSecondary": "次標題",
-            "description": "介紹",
+            "description": "",
             #"tags": [1],
             "contactUnit": "中華民國創業投資商業同業公會",
             "contactName": "曾炫誠",
-            #"contactPhone": "(02)2546-5336",
+            "contactPhone": "",
             #"contactFax": "(02)2389-0636",
             #"contactEmail": "owen.tzeng@tvca.org.tw",
         }
