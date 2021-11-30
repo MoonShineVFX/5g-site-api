@@ -5,7 +5,7 @@ from ..user.models import EditorBaseModel
 
 class News(EditorBaseModel):
     title = models.CharField(max_length=200, default="", blank=True)
-    description = models.CharField(max_length=200, default="", blank=True)
+    description = models.TextField(null=True, default="", blank=True)
     detail = models.TextField(null=True, default="", blank=True)
     is_hot = models.BooleanField(default=False)
     hot_at = models.DateTimeField(null=True)
