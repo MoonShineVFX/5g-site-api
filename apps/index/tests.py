@@ -231,8 +231,8 @@ class IndexTest(TestCase):
             "link": "http://google.com.tw",
             "name": "夥伴名稱",
             'nameEnglish': "english name",
-            "phone": "夥伴電話",
-            "email": "test@email.com",
+            "phone": "",
+            #"email": "test@email.com",
             "description": "夥伴介紹",
             "tags": [1, 2]
         }

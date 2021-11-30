@@ -46,8 +46,8 @@ class Banner(EditorBaseModel):
 class Partner(EditorBaseModel):
     name = models.CharField(max_length=100)
     name_english = models.CharField(max_length=100, null=True)
-    phone = models.CharField(max_length=20)
-    email = models.EmailField()
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
     description = models.CharField(max_length=150)
     link = models.URLField()
     image = models.ImageField(upload_to='partners', null=True)
