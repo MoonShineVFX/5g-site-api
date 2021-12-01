@@ -93,5 +93,5 @@ def auto_delete_file(sender, instance, **kargs):
     if file:
         try:
             file.storage.delete(name=file.name)
-        except exceptions.GatewayTimeout as e:
+        except exceptions as e:
             print(e)
