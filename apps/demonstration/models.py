@@ -84,10 +84,9 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
 @receiver(models.signals.post_delete, sender=Image)
 @receiver(models.signals.post_delete, sender=File)
 def auto_delete_file(sender, instance, **kargs):
-    storage_client = storage.Client()
-    bucket = storage_client.get_bucket(settings.GS_BUCKET_NAME)
-    blob = bucket.blob(instance.file.name)
-    try:
-        blob.delete()
-    except exceptions.NotFound as e:
-        print(e)
+    file = instance.file
+    if file:
+        try:
+            file.storage.delete(name=file.name)
+        except exceptions.NotFound as e:
+            print(e)
