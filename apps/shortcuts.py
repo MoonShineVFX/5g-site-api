@@ -99,6 +99,12 @@ class PostDestroyView(DestroyAPIView):
     def post(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+    def perform_destroy(self, instance):
+        try:
+            instance.delete()
+        except Exception:
+            pass
+
     def get_object(self):
         return get_object_or_404(self.queryset, id=self.request.data.get('id', None))
 
