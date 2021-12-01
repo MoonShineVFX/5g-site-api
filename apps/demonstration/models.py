@@ -81,6 +81,8 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
             print(e)
 
 
+from urllib.error import HTTPError
+
 @receiver(models.signals.pre_delete, sender=Image)
 @receiver(models.signals.pre_delete, sender=File)
 def auto_delete_file(sender, instance, **kargs):
@@ -93,5 +95,6 @@ def auto_delete_file(sender, instance, **kargs):
     if file:
         try:
             file.storage.delete(name=file.name)
-        except Exception:
-            pass
+        except HTTPError as e:
+            if e.code == 502:
+                pass
