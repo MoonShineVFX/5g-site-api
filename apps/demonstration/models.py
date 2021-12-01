@@ -81,8 +81,8 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
             print(e)
 
 
-@receiver(models.signals.post_delete, sender=Image)
-@receiver(models.signals.post_delete, sender=File)
+@receiver(models.signals.pre_delete, sender=Image)
+@receiver(models.signals.pre_delete, sender=File)
 def auto_delete_file(sender, instance, **kargs):
     file = instance.file
     if file:
