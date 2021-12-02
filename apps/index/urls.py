@@ -30,4 +30,6 @@ urlpatterns = [
     url(r'^web_security$', views.WebSecurityDetail.as_view(), name='web-security-detail'),
 
     url(r'^web_index$', views.WebIndexList.as_view(), name='web-index'),
+
+    url(r'^test_204$', views.TestNoContentResponse.as_view(), name='test-204'),
 ]
