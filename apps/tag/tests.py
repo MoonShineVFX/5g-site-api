@@ -4,6 +4,7 @@ from django.test.utils import override_settings
 from ..shortcuts import debugger_queries
 from .models import Tag, Category
 from ..user.models import User
+from ..policy.models import Policy
 
 
 def setup_categories_tags(creator_id=1):
@@ -18,6 +19,10 @@ def setup_categories_tags(creator_id=1):
 
     Tag.objects.create(id=1, name="互動", category_id=1, creator_id=creator_id)
     Tag.objects.create(id=2, name="5G", category_id=2, creator_id=creator_id)
+
+    p1 = Policy.objects.create(
+            id=1, title="title01", link="https://www.facebook.com/", creator_id=1)
+    p1.tags.add(1)
 
 
 class TagTest(TestCase):
@@ -88,6 +93,7 @@ class TagTest(TestCase):
         response = self.client.post(url, data=data, format='json')
         assert response.status_code == 204
         assert not Tag.objects.filter(id=1).exists()
+        assert Policy.objects.filter(id=1).exists()
 
     @override_settings(DEBUG=True)
     @debugger_queries

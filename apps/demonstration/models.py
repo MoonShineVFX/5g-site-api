@@ -90,13 +90,17 @@ def auto_delete_file(sender, instance, **kargs):
     目前pre_save不會502，pre_delete,post_delete都會觸發502，但三者都會成功刪除檔案
     upstream connect error or disconnect/reset before headers. reset reason: protocol error
     """
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(settings.GS_BUCKET_NAME)
+
     if type(instance) == Demonstration:
         file = instance.thumb
     else:
         file = instance.file
 
-    if file:
+    blob = bucket.blob(file.name)
+    if blob:
         try:
-            file.storage.delete(name=file.name)
-        except Exception:
-            pass
+            blob.delete()
+        except Exception as e:
+            print(e)
