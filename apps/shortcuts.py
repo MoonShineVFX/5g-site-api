@@ -99,8 +99,7 @@ class PostDestroyView(DestroyAPIView):
     def post(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
-        data = {}
-        return Response(data=data, status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
 
     def perform_destroy(self, instance):
         try:
