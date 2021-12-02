@@ -104,3 +104,20 @@ def auto_delete_file(sender, instance, **kargs):
             blob.delete()
         except Exception as e:
             print(e)
+
+
+from django.core.files.storage import default_storage
+
+
+@receiver(models.signals.pre_delete, sender=Image)
+@receiver(models.signals.pre_delete, sender=File)
+@receiver(models.signals.pre_delete, sender=Demonstration)
+def auto_delete_file_using_default_storage(sender, instance, **kargs):
+    if type(instance) == Demonstration:
+        file = instance.thumb
+    else:
+        file = instance.file
+
+    if file:
+        if default_storage.exists(file.name):
+            default_storage.delete(file.name)
