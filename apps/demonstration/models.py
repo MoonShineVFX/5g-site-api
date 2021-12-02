@@ -81,20 +81,22 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
             print(e)
 
 
-from urllib.error import HTTPError
-
 @receiver(models.signals.pre_delete, sender=Image)
 @receiver(models.signals.pre_delete, sender=File)
+@receiver(models.signals.pre_delete, sender=Demonstration)
 def auto_delete_file(sender, instance, **kargs):
     """
     google-cloud-storage delete 檔案
     目前pre_save不會502，pre_delete,post_delete都會觸發502，但三者都會成功刪除檔案
     upstream connect error or disconnect/reset before headers. reset reason: protocol error
     """
-    file = instance.file
+    if type(instance) == Demonstration:
+        file = instance.thumb
+    else:
+        file = instance.file
+
     if file:
         try:
             file.storage.delete(name=file.name)
-        except HTTPError as e:
-            if e.code == 502:
-                pass
+        except Exception:
+            pass

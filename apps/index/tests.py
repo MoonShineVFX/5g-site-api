@@ -195,6 +195,19 @@ class IndexTest(TestCase):
 
     @override_settings(DEBUG=True)
     @debugger_queries
+    def test_delete_banner(self):
+        url = '/api/banner_delete'
+        data = {
+            "id": 1,
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='json')
+        print(response.data)
+        assert response.status_code == 204
+        assert not Banner.objects.filter(id=1).exists()
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
     def test_update_banner_length_setting(self):
         url = '/api/banner_length_setting'
         data = {
@@ -272,6 +285,19 @@ class IndexTest(TestCase):
         assert p is not None
         tag_id_list = [tag.id for tag in p.tags.all()]
         assert tag_id_list == [1]
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_delete_partner(self):
+        url = '/api/partner_delete'
+        data = {
+            "id": 1,
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='json')
+        print(response.data)
+        assert response.status_code == 204
+        assert not Partner.objects.filter(id=1).exists()
 
     @override_settings(DEBUG=True)
     @debugger_queries

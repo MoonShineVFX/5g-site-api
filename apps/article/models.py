@@ -1,6 +1,9 @@
 from django.db import models
 from ..tag.models import Tag
 from ..user.models import EditorBaseModel
+from google.cloud import exceptions, storage
+from django.dispatch import receiver
+from django.conf import settings
 
 
 class News(EditorBaseModel):
@@ -19,3 +22,14 @@ class Image(EditorBaseModel):
     size = models.IntegerField(null=True)
 
     objects = models.Manager()
+
+
+@receiver(models.signals.post_delete, sender=Image)
+def auto_delete_file(sender, instance, **kargs):
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(settings.GS_BUCKET_NAME)
+    blob = bucket.blob(instance.file.name)
+    try:
+        blob.delete()
+    except Exception as e:
+        print(e)

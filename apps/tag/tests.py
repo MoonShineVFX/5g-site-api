@@ -79,6 +79,18 @@ class TagTest(TestCase):
 
     @override_settings(DEBUG=True)
     @debugger_queries
+    def test_tag_delete(self):
+        url = '/api/tag_delete'
+        data = {
+            "id": 1,
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='json')
+        assert response.status_code == 204
+        assert not Tag.objects.filter(id=1).exists()
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
     def test_common(self):
         url = '/api/common'
         data = {

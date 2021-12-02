@@ -85,3 +85,14 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
             old_file.storage.delete(name=old_file.name)
         except exceptions.NotFound as e:
             print(e)
+
+
+@receiver(models.signals.pre_delete, sender=Banner)
+@receiver(models.signals.pre_delete, sender=Partner)
+def auto_delete_file(sender, instance, **kargs):
+    file = instance.image
+    if file:
+        try:
+            file.storage.delete(name=file.name)
+        except Exception:
+            pass

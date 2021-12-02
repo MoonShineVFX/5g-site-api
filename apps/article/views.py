@@ -7,7 +7,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
-from ..shortcuts import WebCreateView, WebUpdateView, PostCreateView
+from ..shortcuts import WebCreateView, WebUpdateView, PostCreateView, PostDestroyView
 
 
 class NewsList(ListAPIView):
@@ -47,6 +47,10 @@ class NewsUpdate(WebUpdateView):
 
     def get_object(self):
         return get_object_or_404(News, id=self.request.data.get('id', None))
+
+
+class NewsDelete(PostDestroyView):
+    queryset = News.objects.select_related("creator", "updater").all()
 
 
 class ImageUpload(PostCreateView):

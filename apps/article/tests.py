@@ -118,6 +118,18 @@ class ArticleTest(TestCase):
 
     @override_settings(DEBUG=True)
     @debugger_queries
+    def test_delete_news(self):
+        url = '/api/news_delete'
+        data = {
+            "id": 1,
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='json')
+        assert response.status_code == 204
+        assert not News.objects.filter(id=1).exists()
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
     def test_upload_image(self):
         url = '/api/image_upload'
         data = {

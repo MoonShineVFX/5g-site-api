@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^news/(?P<pk>\d+)$', views.NewsDetail.as_view(), name='news-detail'),
     url(r'^news_create$', views.NewsCreate.as_view(), name='news-create'),
     url(r'^news_update$', views.NewsUpdate.as_view(), name='news-update'),
+    url(r'^news_delete$', views.NewsDelete.as_view(), name='news-delete'),
 
     url(r'^image_upload$', views.ImageUpload.as_view(), name='image-upload'),
 

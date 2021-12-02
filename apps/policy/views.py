@@ -3,8 +3,8 @@ from ..tag.models import Tag
 from . import serializers
 from ..tag.serializers import TagNameOnlySerializer
 from ..pagination import NewsPagination
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView
-from ..shortcuts import PostCreateView, PostUpdateView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from ..shortcuts import PostCreateView, PostUpdateView, PostDestroyView
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -76,3 +76,7 @@ class PolicyCreate(PostCreateView):
 class PolicyUpdate(PostUpdateView):
     queryset = Policy.objects.select_related("creator", "updater").prefetch_related("tags").all()
     serializer_class = serializers.PolicyCreateUpdateSerializer
+
+
+class PolicyDelete(PostDestroyView):
+    queryset = Policy.objects.select_related("creator", "updater").prefetch_related("tags").all()

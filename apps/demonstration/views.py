@@ -47,6 +47,11 @@ class DemonstrationUpdate(WebUpdateView):
         return get_object_or_404(self.queryset, id=self.request.data.get('id', None))
 
 
+class DemonstrationDelete(PostDestroyView):
+    serializer_class = serializers.DemonstrationCreateUpdateSerializer
+    queryset = Demonstration.objects.all()
+
+
 class ImageUpload(PostCreateView):
     serializer_class = serializers.ImageUploadSerializer
     queryset = Image.objects.all()

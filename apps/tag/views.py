@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from .models import Tag, Category
 from . import serializers
-from ..shortcuts import PostUpdateView
+from ..shortcuts import PostUpdateView, PostDestroyView
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -59,3 +59,7 @@ class TagCreate(APIView):
 class TagUpdate(PostUpdateView):
     queryset = Tag.objects.select_related("creator", "updater").all()
     serializer_class = serializers.TagUpdateSerializer
+
+
+class TagDelete(PostDestroyView):
+    queryset = Tag.objects.select_related("creator", "updater").all()

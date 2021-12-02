@@ -6,7 +6,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
-from ..shortcuts import PostCreateView, PostUpdateView, WebUpdateView
+from ..shortcuts import PostCreateView, PostUpdateView, PostDestroyView, WebUpdateView
 from ..pagination import PartnerPagination
 from . import serializers
 from ..tag.serializers import TagNameOnlySerializer
@@ -122,6 +122,10 @@ class BannerUpdate(PostUpdateView):
     serializer_class = serializers.BannerCreateUpdateSerializer
 
 
+class BannerDelete(PostDestroyView):
+    queryset = Banner.objects.select_related("creator", "updater").all()
+
+
 class PartnerList(APIView):
     permission_classes = (IsAuthenticated, )
 
@@ -147,6 +151,10 @@ class PartnerCreate(PostCreateView):
 class PartnerUpdate(PostUpdateView):
     queryset = Partner.objects.select_related("creator", "updater").prefetch_related('tags').all()
     serializer_class = serializers.PartnerCreateUpdateSerializer
+
+
+class PartnerDelete(PostDestroyView):
+    queryset = Partner.objects.select_related("creator", "updater").prefetch_related('tags').all()
 
 
 class WebPartnerList(ListAPIView):

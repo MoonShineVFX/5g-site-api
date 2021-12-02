@@ -126,3 +126,15 @@ class PolicyTest(TestCase):
         print(response.data)
         assert response.status_code == 200
         assert Policy.objects.filter(id=1, title=data["title"], updater_id=self.user.id).exists()
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_policy_delete(self):
+        url = '/api/policy_delete'
+        data = {
+            "id": 1,
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='json')
+        assert response.status_code == 204
+        assert not Policy.objects.filter(id=1).exists()
