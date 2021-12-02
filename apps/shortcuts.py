@@ -97,7 +97,10 @@ class PostDestroyView(DestroyAPIView):
     permission_classes = (IsAuthenticated, )
 
     def post(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        data = {}
+        return Response(data=data, status=status.HTTP_204_NO_CONTENT)
 
     def perform_destroy(self, instance):
         try:
