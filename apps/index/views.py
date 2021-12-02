@@ -209,7 +209,21 @@ class WebIndexList(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-class TestNoContentResponse(APIView):
-
+class Test204EmptyResponse(APIView):
     def post(self, request, *args, **kwargs):
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class Test204DictResponse(APIView):
+    def post(self, request, *args, **kwargs):
+        return Response(data={}, status=status.HTTP_204_NO_CONTENT)
+
+
+class Test200EmptyResponse(APIView):
+    def post(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_200_OK)
+
+
+class Test200DictResponse(APIView):
+    def post(self, request, *args, **kwargs):
+        return Response(data={}, status=status.HTTP_200_OK)

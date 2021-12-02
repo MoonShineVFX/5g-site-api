@@ -31,5 +31,8 @@ urlpatterns = [
 
     url(r'^web_index$', views.WebIndexList.as_view(), name='web-index'),
 
-    url(r'^test_204$', views.TestNoContentResponse.as_view(), name='test-204'),
+    url(r'^test_204$', views.Test204DictResponse.as_view(), name='test-204'),
+    url(r'^test_204_with_empty$', views.Test204EmptyResponse.as_view(), name='test-204-with-empty'),
+    url(r'^test_200$', views.Test200DictResponse.as_view(), name='test-200'),
+    url(r'^test_200_with_empty$', views.Test200EmptyResponse.as_view(), name='test-200-with-empty'),
 ]
