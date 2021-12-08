@@ -32,7 +32,7 @@ jobs:
             --tag "asia-east1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/$SERVICE_NAME:latest"
   build:
     name: Build
-    needs: build
+    needs: deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
