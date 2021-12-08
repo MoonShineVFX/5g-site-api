@@ -31,6 +31,10 @@ jobs:
             --quiet \
             --tag "asia-east1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/$SERVICE_NAME:latest"
       - name: Deploy to Cloud Run
+        env:
+          GS_BUCKET_NAME: backend-django
+          REGION: asia-east1
+          DATABASE_INSTANCE: cht-fiveg-sql
         run: |-
           gcloud run deploy $SERVICE_NAME \
             --region asia-east1 \
