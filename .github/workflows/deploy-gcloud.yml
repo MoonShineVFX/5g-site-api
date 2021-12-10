@@ -23,8 +23,10 @@ jobs:
         uses: google-github-actions/setup-gcloud@v0.3.0
         with:
           project_id: ${{ env.PROJECT_ID }}
-      - name: Set kaniko cache
+      - name: Set using kaniko cache
         run: gcloud config set builds/use_kaniko True
+      - name: Set kaniko cache expiration time
+        run: gcloud config set builds/kaniko_cache_ttl 1440
       - name: Build image
         run: |-
           gcloud builds submit \
