@@ -20,16 +20,15 @@ def setup_categories_tags(creator_id=1):
     Tag.objects.create(id=1, name="互動", category_id=1, creator_id=creator_id)
     Tag.objects.create(id=2, name="5G", category_id=2, creator_id=creator_id)
 
-    p1 = Policy.objects.create(
-            id=1, title="title01", link="https://www.facebook.com/", creator_id=1)
-    p1.tags.add(1)
-
 
 class TagTest(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = User.objects.create(id=1, name="user01", email="user01@mail.com")
         setup_categories_tags()
+        p1 = Policy.objects.create(
+            id=1, title="title01", link="https://www.facebook.com/", creator_id=1)
+        p1.tags.add(1)
 
     @override_settings(DEBUG=True)
     @debugger_queries

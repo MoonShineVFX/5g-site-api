@@ -20,6 +20,7 @@ class WebPolicyDetailSerializer(EditTimeBaseSerializer, CategoryMixin):
     applicationWay = serializers.CharField(source="application_way")
     applicationObject = serializers.CharField(source="application_object")
     amountQuota = serializers.CharField(source="amount_quota")
+    websiteName = serializers.CharField(source="website_name")
 
     tags = TagNameOnlySerializer(many=True, read_only=True)
     contact = ContactSerializer()
@@ -28,7 +29,7 @@ class WebPolicyDetailSerializer(EditTimeBaseSerializer, CategoryMixin):
         model = Policy
         fields = ('id', 'title', 'description', 'tags', 'contact',
                   'categoryKey', 'categoryName', 'createTime', 'updateTime',
-                  'applicationWay', 'applicationObject', 'amountQuota', 'link',)
+                  'applicationWay', 'applicationObject', 'amountQuota', 'websiteName', 'link',)
 
 
 class PolicyListSerializer(EditorBaseSerializer, CategoryMixin):
@@ -36,6 +37,7 @@ class PolicyListSerializer(EditorBaseSerializer, CategoryMixin):
     applicationWay = serializers.CharField(source="application_way")
     applicationObject = serializers.CharField(source="application_object")
     amountQuota = serializers.CharField(source="amount_quota")
+    websiteName = serializers.CharField(source="website_name")
 
     tags = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     contact = ContactSerializer()
@@ -43,7 +45,7 @@ class PolicyListSerializer(EditorBaseSerializer, CategoryMixin):
     class Meta:
         model = Policy
         fields = ('id', 'title', 'titleSecondary', 'applicationWay', 'applicationObject', 'amountQuota',
-                  'description', 'categoryKey', 'tags', 'contact', 'link',
+                  'description', 'categoryKey', 'tags', 'contact', 'websiteName', 'link',
                   'createTime', 'updateTime', 'creator', 'updater')
 
 
@@ -51,6 +53,7 @@ class PolicyDetailSerializer(EditorBaseSerializer, CategoryMixin):
     applicationWay = serializers.CharField(source="application_way")
     applicationObject = serializers.CharField(source="application_object")
     amountQuota = serializers.CharField(source="amount_quota")
+    websiteName = serializers.CharField(source="website_name")
 
     tags = TagNameOnlySerializer(many=True, read_only=True)
     contact = ContactSerializer()
@@ -59,12 +62,13 @@ class PolicyDetailSerializer(EditorBaseSerializer, CategoryMixin):
         model = Policy
         fields = ('id', 'title', 'description', 'tags', 'contact',
                   'categoryKey', 'categoryName',
-                  'applicationWay', 'applicationObject', 'amountQuota', 'link',
+                  'applicationWay', 'applicationObject', 'amountQuota', 'websiteName', 'link',
                   'createTime', 'updateTime', 'creator', 'updater')
 
 
 class PolicyCreateUpdateSerializer(EditorBaseSerializer):
     titleSecondary = serializers.CharField(source="title_secondary")
+    websiteName = serializers.CharField(source="website_name")
 
     contactUnit = serializers.CharField(source="contact_name", write_only=True, required=False, allow_null=True, allow_blank=True)
     contactName = serializers.CharField(source="contact_unit", write_only=True, required=False, allow_null=True, allow_blank=True)
@@ -80,7 +84,7 @@ class PolicyCreateUpdateSerializer(EditorBaseSerializer):
 
     class Meta:
         model = Policy
-        fields = ('id', 'title', 'titleSecondary', 'description', 'tags', 'link',
+        fields = ('id', 'title', 'titleSecondary', 'description', 'tags', 'websiteName', 'link',
                   'contactUnit', 'contactName', 'contactPhone', 'contactFax', 'contactEmail',
                   'applicationWay', 'applicationObject', 'amountQuota',
                   'contact',

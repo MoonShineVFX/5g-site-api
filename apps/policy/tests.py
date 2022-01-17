@@ -17,7 +17,7 @@ class PolicyTest(TestCase):
         Tag.objects.create(id=4, name="local_tag", category_id=5, creator_id=self.user.id)
 
         p1 = Policy.objects.create(
-            id=1, title="title01", link="https://www.facebook.com/", creator_id=1)
+            id=1, title="title01", website_name="facebook", link="https://www.facebook.com/", creator_id=1)
         p2 = Policy.objects.create(
             id=2, title="title02", link="https://www.facebook.com/", creator_id=1)
         p3 = Policy.objects.create(
@@ -71,6 +71,7 @@ class PolicyTest(TestCase):
             "titleSecondary": "次標題",
             "description": "介紹",
             #"tags": [1],
+            "websiteName": "駁二共創基地網",
             "contactUnit": "中華民國創業投資商業同業公會",
             "contactName": "曾炫誠",
             "contactPhone": "(02)2546-5336",
