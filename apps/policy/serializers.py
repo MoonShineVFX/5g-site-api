@@ -68,7 +68,7 @@ class PolicyDetailSerializer(EditorBaseSerializer, CategoryMixin):
 
 class PolicyCreateUpdateSerializer(EditorBaseSerializer):
     titleSecondary = serializers.CharField(source="title_secondary")
-    websiteName = serializers.CharField(source="website_name")
+    websiteName = serializers.CharField(source="website_name", required=False, allow_null=True, allow_blank=True)
 
     contactUnit = serializers.CharField(source="contact_name", write_only=True, required=False, allow_null=True, allow_blank=True)
     contactName = serializers.CharField(source="contact_unit", write_only=True, required=False, allow_null=True, allow_blank=True)
