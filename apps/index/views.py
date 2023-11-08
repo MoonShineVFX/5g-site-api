@@ -112,6 +112,13 @@ class BannerLengthSetting(WebUpdateView):
     serializer_class = serializers.BannerLengthSerializer
 
 
+class LoopTimeSetting(WebUpdateView):
+    def get_object(self):
+        return Setting.objects.first()
+
+    serializer_class = serializers.LoopTimeSerializer
+
+
 class BannerCreate(PostCreateView):
     queryset = Banner.objects.select_related("creator", "updater").all()
     serializer_class = serializers.BannerCreateUpdateSerializer
@@ -198,6 +205,7 @@ class WebIndexList(APIView):
         demo_places = Demonstration.objects.filter(type="5g").order_by("-updated_at", "-created_at").all()[:3]
 
         data = {
+            "loopTime": setting.loop_time,
             "banners": serializers.WebIndexBannerSerializer(banners, many=True).data,
             "demoPlaces": WebDemonstrationListSerializer(demo_places, many=True).data,
             "news": {

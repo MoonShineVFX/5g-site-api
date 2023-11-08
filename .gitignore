@@ -2,3 +2,7 @@
 /mysite/.env
 /mysite/test.jpeg
 /db.json
+.env
+*.pyc
+.python-version
+.vscode/launch.json

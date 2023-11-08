@@ -9,7 +9,7 @@ from google.cloud import exceptions
 
 class Setting(EditorBaseModel):
     banner_length = models.IntegerField(default=5)
-
+    loop_time = models.IntegerField(default=6)
     objects = models.Manager()
 
 
