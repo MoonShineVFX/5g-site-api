@@ -60,7 +60,7 @@ class ImageUpload(PostCreateView):
 
 class WebNewsList(ListAPIView):
     serializer_class = serializers.WebNewsListSerializer
-    queryset = News.objects.prefetch_related('tags').all().distinct().order_by('-id')
+    queryset = News.objects.prefetch_related('tags').filter(is_active=True).distinct().order_by('-updated_at', '-id')
     pagination_class = NewsPagination
 
     def list(self, request, *args, **kwargs):
@@ -87,5 +87,5 @@ class WebNewsList(ListAPIView):
 
 
 class WebNewsDetail(RetrieveAPIView):
-    queryset = News.objects.prefetch_related('tags', 'tags__category').all()
+    queryset = News.objects.prefetch_related('tags', 'tags__category').filter(is_active=True)
     serializer_class = serializers.WebNewsDetailSerializer
