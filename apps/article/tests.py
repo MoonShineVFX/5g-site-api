@@ -183,6 +183,22 @@ class WebArticleTest(TestCase):
 
     @override_settings(DEBUG=True)
     @debugger_queries
+    def test_get_web_news_order(self):
+        n2 = News.objects.get(id=2)
+        n2.tags.add(1)
+
+        News.objects.filter(id=1).update(created_at="2020-01-01 00:00:00", updated_at="2020-12-01 00:00:00")
+        News.objects.filter(id=2).update(created_at="2020-03-01 00:00:00", )
+        News.objects.filter(id=3).update(created_at="2020-04-01 00:00:00", )
+        url = '/api/web_news'
+        response = self.client.get(url)
+        print(response.data)
+        assert response.status_code == 200
+        result_list = [item["id"] for item in response.data["list"]]
+        assert result_list == [1, 3, 2]
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
     def test_get_web_news_list(self):
         url = '/api/web_news?cate=newsIndustry'
         response = self.client.get(url)

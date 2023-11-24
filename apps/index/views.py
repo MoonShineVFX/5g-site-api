@@ -1,3 +1,4 @@
+from django.db.models.functions import Greatest, Coalesce
 from .models import About, Privacy, Security, Banner, Partner, Setting
 from ..article.models import News
 from ..tag.models import Tag
@@ -140,7 +141,9 @@ class PartnerList(APIView):
         return self.post(self, request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        partners = Partner.objects.select_related("creator", "updater").prefetch_related('tags').all()
+        partners = Partner.objects.select_related("creator", "updater").prefetch_related('tags').annotate(
+            latest_time=Coalesce(Greatest('updated_at', 'created_at'), 'created_at')
+            ).order_by('-latest_time').all()
         partner_tags = Tag.objects.filter(category_id=3)
 
         data = {
@@ -166,7 +169,9 @@ class PartnerDelete(PostDestroyView):
 
 class WebPartnerList(ListAPIView):
     serializer_class = serializers.WebPartnerSerializer
-    queryset = Partner.objects.all()
+    queryset = Partner.objects.annotate(
+            latest_time=Coalesce(Greatest('updated_at', 'created_at'), 'created_at')
+            ).order_by('-latest_time').all()
     pagination_class = PartnerPagination
 
     def list(self, request, *args, **kwargs):

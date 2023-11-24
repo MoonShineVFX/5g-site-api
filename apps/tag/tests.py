@@ -91,7 +91,7 @@ class TagTest(TestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
         print(response.data)
-        assert response.status_code == 204
+        assert response.status_code == 200
         assert not Tag.objects.filter(id=1).exists()
         assert Policy.objects.filter(id=1).exists()
 

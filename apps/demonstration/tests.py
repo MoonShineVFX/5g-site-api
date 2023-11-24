@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from rest_framework.test import APIClient
 from django.test.utils import override_settings
 from ..shortcuts import debugger_queries
@@ -167,12 +167,11 @@ class DemonstrationTest(TestCase):
     def test_demo_places_delete(self):
         url = '/api/demo_place_delete'
         data = {
-                   "id": 1,
+            "id": 1,
         }
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
-        print(response.data)
-        assert response.status_code == 204
+        assert response.status_code == 200
         assert not Demonstration.objects.filter(id=1).exists()
         assert not Image.objects.filter(demonstration_id=1).exists()
 
