@@ -1,3 +1,4 @@
+from django.db.models.functions import Greatest, Coalesce
 from .models import Demonstration, Image, File
 from . import serializers
 from rest_framework.response import Response
@@ -10,7 +11,9 @@ from rest_framework.permissions import IsAuthenticated
 class DemonstrationList(ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = serializers.DemonstrationListSerializer
-    queryset = Demonstration.objects.select_related("creator", "updater").all()
+    queryset = Demonstration.objects.select_related("creator", "updater").annotate(
+            latest_time=Coalesce(Greatest('updated_at', 'created_at'), 'created_at')
+            ).order_by('-latest_time').all()
 
     def post(self, request, *args, **kwargs):
         return self.get(self, request, *args, **kwargs)
@@ -48,7 +51,6 @@ class DemonstrationUpdate(WebUpdateView):
 
 
 class DemonstrationDelete(PostDestroyView):
-    serializer_class = serializers.DemonstrationCreateUpdateSerializer
     queryset = Demonstration.objects.all()
 
 
@@ -72,7 +74,9 @@ class FileDelete(PostDestroyView):
 
 class WebDemonstrationList(ListAPIView):
     serializer_class = serializers.WebDemonstrationListSerializer
-    queryset = Demonstration.objects.all()
+    queryset = Demonstration.objects.annotate(
+            latest_time=Coalesce(Greatest('updated_at', 'created_at'), 'created_at')
+            ).order_by('-latest_time').all()
 
     def get_queryset(self):
         type = self.request.query_params.get('type', '5g')

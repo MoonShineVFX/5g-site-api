@@ -1,3 +1,4 @@
+from django.db.models.functions import Greatest, Coalesce
 from .models import News, Image
 from ..tag.models import Tag
 from . import serializers
@@ -13,7 +14,9 @@ from ..shortcuts import WebCreateView, WebUpdateView, PostCreateView, PostDestro
 class NewsList(ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = serializers.NewsListSerializer
-    queryset = News.objects.select_related("creator", "updater").prefetch_related('tags', 'tags__category').all()
+    queryset = News.objects.select_related("creator", "updater").prefetch_related('tags', 'tags__category').annotate(
+            latest_time=Coalesce(Greatest('updated_at', 'created_at'), 'created_at')
+            ).order_by('-latest_time').all()
 
     def post(self, request, *args, **kwargs):
         return self.get(self, request, *args, **kwargs)
@@ -60,7 +63,9 @@ class ImageUpload(PostCreateView):
 
 class WebNewsList(ListAPIView):
     serializer_class = serializers.WebNewsListSerializer
-    queryset = News.objects.prefetch_related('tags').all().distinct().order_by('-id')
+    queryset = News.objects.prefetch_related('tags').filter(is_active=True).distinct().annotate(
+            latest_time=Coalesce(Greatest('updated_at', 'created_at'), 'created_at')
+            ).order_by('-latest_time')
     pagination_class = NewsPagination
 
     def list(self, request, *args, **kwargs):
@@ -87,5 +92,5 @@ class WebNewsList(ListAPIView):
 
 
 class WebNewsDetail(RetrieveAPIView):
-    queryset = News.objects.prefetch_related('tags', 'tags__category').all()
+    queryset = News.objects.prefetch_related('tags', 'tags__category').filter(is_active=True)
     serializer_class = serializers.WebNewsDetailSerializer

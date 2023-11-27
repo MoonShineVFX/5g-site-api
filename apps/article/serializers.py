@@ -8,10 +8,11 @@ from ..tag.serializers import TagNameOnlySerializer, CategoryMixin
 
 class NewsSerializer(EditorBaseSerializer):
     isHot = serializers.BooleanField(source="is_hot")
+    isActive = serializers.BooleanField(source="is_active", required=False)
 
     class Meta:
         model = News
-        fields = ('id', 'title', 'description', "detail", 'tags', "isHot",
+        fields = ('id', 'title', 'description', "detail", 'tags', "isHot", "isActive",
                   'createTime', 'updateTime', 'creator', 'updater')
 
     def is_hot_updater(self, validated_data):
@@ -52,20 +53,22 @@ class ImageSerializer(serializers.ModelSerializer):
 class NewsListSerializer(EditorBaseSerializer, CategoryMixin):
     tags = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     isHot = serializers.BooleanField(source="is_hot")
+    isActive = serializers.BooleanField(source="is_active")
 
     class Meta:
         model = News
-        fields = ('id', 'title', 'description', 'categoryId', 'categoryKey', 'categoryName', 'tags', "isHot",
+        fields = ('id', 'title', 'description', 'categoryId', 'categoryKey', 'categoryName', 'tags', "isHot", "isActive",
                   'createTime', 'updateTime', 'creator', 'updater')
 
 
 class NewsDetailSerializer(EditorBaseSerializer):
     tags = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     isHot = serializers.BooleanField(source="is_hot")
+    isActive = serializers.BooleanField(source="is_active")
 
     class Meta:
         model = News
-        fields = ('id', 'title', 'description', 'detail', 'tags', "isHot",
+        fields = ('id', 'title', 'description', 'detail', 'tags', "isHot", "isActive",
                   'createTime', 'updateTime', 'creator', 'updater')
 
 

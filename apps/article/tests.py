@@ -33,6 +33,18 @@ class ArticleTest(TestCase):
         print(response)
         assert response.status_code == 200
         print(response.data['list'])
+        assert len(response.data['list']) == 2
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_get_news_list_with_is_active_false(self):
+        News.objects.filter(id=1).update(is_active=False)
+        url = '/api/news'
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url)
+        print(response)
+        assert response.status_code == 200
+        assert len(response.data['list']) == 2
 
     @override_settings(DEBUG=True)
     @debugger_queries
@@ -99,6 +111,7 @@ class ArticleTest(TestCase):
             "description": "description",
             "detail": "<html>news</html>",
             "isHot": False,
+            "isActive": False,
             "tags": [1, 2]
         }
         self.client.force_authenticate(user=self.user)
@@ -107,7 +120,9 @@ class ArticleTest(TestCase):
         assert response.data == {}
         del data["tags"]
         del data["isHot"]
+        del data["isActive"]
         data["is_hot"] = False
+        data["is_active"] = False
         data["hot_at"] = None
         data["updater_id"] = self.user.id
         news = News.objects.filter(**data).first()
@@ -125,7 +140,8 @@ class ArticleTest(TestCase):
         }
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
-        assert response.status_code == 204
+        print(response.status_code)
+        assert response.status_code == 200
         assert not News.objects.filter(id=1).exists()
 
     @override_settings(DEBUG=True)
@@ -167,6 +183,22 @@ class WebArticleTest(TestCase):
 
     @override_settings(DEBUG=True)
     @debugger_queries
+    def test_get_web_news_order(self):
+        n2 = News.objects.get(id=2)
+        n2.tags.add(1)
+
+        News.objects.filter(id=1).update(created_at="2020-01-01 00:00:00", updated_at="2020-12-01 00:00:00")
+        News.objects.filter(id=2).update(created_at="2020-03-01 00:00:00", )
+        News.objects.filter(id=3).update(created_at="2020-04-01 00:00:00", )
+        url = '/api/web_news'
+        response = self.client.get(url)
+        print(response.data)
+        assert response.status_code == 200
+        result_list = [item["id"] for item in response.data["list"]]
+        assert result_list == [1, 3, 2]
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
     def test_get_web_news_list(self):
         url = '/api/web_news?cate=newsIndustry'
         response = self.client.get(url)
@@ -178,6 +210,17 @@ class WebArticleTest(TestCase):
         print(response.data)
         assert response.status_code == 200
         assert response.data['list'] == []
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_get_web_news_list_with_is_active_false(self):
+        News.objects.filter(id=1).update(is_active=False)
+        url = '/api/web_news'
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(url)
+        print(response)
+        assert response.status_code == 200
+        assert len(response.data['list']) == 1
 
     @override_settings(DEBUG=True)
     @debugger_queries

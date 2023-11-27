@@ -1,3 +1,4 @@
+from django.db.models.functions import Greatest, Coalesce
 from .models import Policy
 from ..tag.models import Tag
 from . import serializers
@@ -16,7 +17,9 @@ policy_category_dict = {
 
 class WebPolicyList(ListAPIView):
     serializer_class = serializers.WebPolicyListSerializer
-    queryset = Policy.objects.prefetch_related('tags').all().distinct().order_by('-id')
+    queryset = Policy.objects.prefetch_related('tags').distinct().annotate(
+            latest_time=Coalesce(Greatest('updated_at', 'created_at'), 'created_at')
+            ).order_by('-latest_time').all()
     pagination_class = NewsPagination
 
     def list(self, request, *args, **kwargs):
@@ -51,7 +54,9 @@ class PolicyList(ListAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = serializers.PolicyListSerializer
     queryset = Policy.objects.select_related(
-        "creator", "updater").prefetch_related("tags", "tags__category").all().distinct().order_by('-id')
+        "creator", "updater").prefetch_related("tags", "tags__category").distinct().annotate(
+            latest_time=Coalesce(Greatest('updated_at', 'created_at'), 'created_at')
+            ).order_by('-latest_time').all()
 
     def post(self, request, *args, **kwargs):
         return self.get(self, request, *args, **kwargs)

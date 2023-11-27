@@ -137,5 +137,5 @@ class PolicyTest(TestCase):
         }
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
-        assert response.status_code == 204
+        assert response.status_code == 200
         assert not Policy.objects.filter(id=1).exists()

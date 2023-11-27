@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^banner_delete$', views.BannerDelete.as_view(), name='banner-delete'),
 
     url(r'^banner_length_setting$', views.BannerLengthSetting.as_view(), name='banner-length-setting'),
+    url(r'^loop_time_setting$', views.LoopTimeSetting.as_view(), name='loop-time-setting'),
 
     url(r'^about$', views.AboutDetail.as_view(), name='about-detail'),
     url(r'^about_update$', views.AboutUpdate.as_view(), name='about-update'),

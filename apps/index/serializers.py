@@ -67,6 +67,14 @@ class BannerLengthSerializer(serializers.ModelSerializer):
         return data
 
 
+class LoopTimeSerializer(serializers.ModelSerializer):
+    loopTime = serializers.IntegerField(source='loop_time')
+
+    class Meta:
+        model = Setting
+        fields = ('loopTime', )
+
+
 class BannerCreateUpdateSerializer(EditorBaseSerializer):
     file = serializers.ImageField(write_only=True, required=False)
     imgUrl = serializers.SerializerMethodField()

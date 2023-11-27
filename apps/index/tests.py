@@ -203,7 +203,7 @@ class IndexTest(TestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
         print(response.data)
-        assert response.status_code == 204
+        assert response.status_code == 200
         assert not Banner.objects.filter(id=1).exists()
 
     @override_settings(DEBUG=True)
@@ -225,6 +225,19 @@ class IndexTest(TestCase):
         response = self.client.post(url, data=data, format='json')
         assert response.data == {'non_field_errors': [ErrorDetail(string='length must between 5 and 10', code='invalid')]}
         assert response.status_code == 400
+
+    @override_settings(DEBUG=True)
+    @debugger_queries
+    def test_update_loop_time_setting(self):
+        url = '/api/loop_time_setting'
+        data = {
+            "loopTime": 7,
+        }
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(url, data=data, format='json')
+        assert response.data == {}
+        assert response.status_code == 200
+        assert Setting.objects.filter(id=1, loop_time=7).exists()
 
     @override_settings(DEBUG=True)
     @debugger_queries
@@ -296,7 +309,7 @@ class IndexTest(TestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.post(url, data=data, format='json')
         print(response.data)
-        assert response.status_code == 204
+        assert response.status_code == 200
         assert not Partner.objects.filter(id=1).exists()
 
     @override_settings(DEBUG=True)
